@@ -1,0 +1,6 @@
+n_vehicles: 3 # Number of UAVs
+velocity: 3 # Velocity of each UAV [m/s]
+max_flight_time: 120 # Maximun flight time [minutes]
+area_dims: [4000,4000] # (x,y) dimensions of the inspection area
+n_points: 30 # Number of points to visit
+nodes: null
