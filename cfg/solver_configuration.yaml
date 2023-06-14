@@ -1,0 +1,38 @@
+# This is a parameter file for configuring the Vehicle Routing Problem using OR TOOLS library.
+# You can check the documentation for a more detail description of the parameters in the link:
+# https://developers.google.com/optimization/routing/routing_options#local_search_options
+
+# Search limits
+
+solution_limit: null # Limit to the number of solutions generated during the search.
+time_limit: null # Limit in seconds to the time spent : in the search.
+log_search: null
+lns_time_limit: null # Limit in seconds to the time spent in the completion search for each local search neighbor.
+
+# First solution strategy: The first solution strategy is the method the solver uses to find an initial solution.
+
+first_solution_strategy: AUTOMATIC # Lets the solver detect which strategy to use according to the model being solved.
+# AUTOMATIC
+# PATH_CHEAPEST_ARC
+# PATH_MOST_CONSTRAINED_ARC
+# EVALUATOR_STRATEGY
+# SAVINGS
+# SWEEP
+# CHRISTOFIDES
+# ALL_UNPERFORMED
+# BEST_INSERTION
+# PARALLEL_CHEAPEST_INSERTION
+# LOCAL_CHEAPEST_INSERTION
+# GLOBAL_CHEAPEST_ARC
+# LOCAL_CHEAPEST_ARC
+# FIRST_UNBOUND_MIN_VALUE
+
+# Local search strategy: Options for local search strategies (also called metaheuristics)
+
+local_search_strategy: AUTOMATIC # Lets the solver select the metaheuristic.
+# AUTOMATIC
+# GREEDY_DESCENT
+# GUIDED_LOCAL_SEARCH
+# SIMULATED_ANNEALING
+# TABU_SEARCH
+# GENERIC_TABU_SEARCH
