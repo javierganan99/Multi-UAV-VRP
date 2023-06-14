@@ -1,0 +1,11 @@
+name: vrp
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - ortools-python
+  - pytest
+  - pyyaml
+  - unidecode
+
+# Install gmplot using pip install gmplot
