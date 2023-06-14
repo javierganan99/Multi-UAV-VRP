@@ -1,0 +1,14 @@
+n_vehicles: 6 # Number of vechicles
+velocity: 10 # Max velocity of each vehicle [km/h]
+max_flight_time: 3000000 # Maximun time per vehicle [minutes]
+capacity: 10 # Maximun capacity per vehicle
+addresses: [
+        "Casa Aníbal, Sevilla",  # depot
+        "Estadio Ramon Sanchez Pizjuan",
+        "Catedral de Sevilla",
+        "Torre del Oro, Sevilla",
+        "Bodega Diaz Salazar, Sevilla",
+        "Colegio Portaceli, Sevilla",
+        "Casa Ricardo, Sevilla",
+        [37.37104182165023, -5.989382602785987],
+        ]
