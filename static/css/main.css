@@ -1,15 +1,16 @@
 body, html {
-    background-color: rgb(249, 249, 249);
+    background-color: rgb(249,249,249);
 }
 
 .title-box {
-  background-color: #bc6868;
   padding: 20px;
   text-align: center;
-}
-
-.title-box h1 {
-  margin: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-image: linear-gradient(#6899bc, #433ac9);
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .boxh {
@@ -18,54 +19,49 @@ body, html {
   margin-bottom: 20px;
 }
 
-/* Container for the two columns */
+/* Container for the three columns */
 .content {
-  display: flex;
-  justify-content: center; /* Horizontally centers the columns */
-  align-items: center; /* Vertically centers the columns */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
 }
 
 /* Left column */
-.left-column {
-  flex: 1;
-  margin-right: 20px;
+.column {
+  padding: 20px;
 }
 
-/* Right column */
-.right-column {
-  flex: 1;
+.blue-button {
+  background-color: #3970ab;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px;
 }
 
-.generate-button {
-  background-color: darkred;
-  color: white;
-  margin-bottom: 20px;
-  width: 215px;
-  font-size: 18px
+
+.small-blue-button {
+  background-color: #3970ab;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 2px;
 }
 
-.load-button {
-  background-color: rgb(4, 49, 229);
-  color: white;
-  margin-bottom: 20px;
-  width: 215px;
-  font-size: 18px
-}
-
-.solver-button {
-  background-color: rgb(191, 164, 14);
-  color: white;
-  margin-bottom: 20px;
-  width: 215px;
-  font-size: 18px
-}
-
-.reset-button {
-  background-color: rgb(47, 112, 0);
-  color: white;
-  margin-bottom: 20px;
-  width: 215px;
-  font-size: 18px
+.blue-button:hover, .small-blue-button:hover, .custom-dropdown:hover {
+  background-color: #0056b3;
 }
 
 .warning {
@@ -78,8 +74,7 @@ body, html {
 
 /* Heading styles */
 h1 {
-  font-size: 24px;
-  color: #333;
+  font-size: 20px;
 }
 
 h2 {
@@ -105,4 +100,14 @@ label {
   display: block;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.custom-dropdown {
+  background-color: #3970ab;
+  color: #fff; 
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
 }
