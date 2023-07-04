@@ -1,7 +1,5 @@
 import math
 
-import math
-
 def calculate_intermediate_coordinate(c1, c2, velocity, timestamp):
     """
     Calculate intermediate coordinate between two locations using the haversine formula,
@@ -57,18 +55,30 @@ def calculate_intermediate_coordinate(c1, c2, velocity, timestamp):
     return lat_intermediate_deg, lon_intermediate_deg
 
 
-def return_location(routes, distance_matrix, vehicle_index, timestamp):
-    cummulative_time = [distance_matrix[i][i+1] for i in routes[vehicle_index]["nodes"][:-1]]
-    cummulative_time = [0] + [sum(cummulative_time[:i+1]) for i in range(len(cummulative_time))]
-    for i, initial in enumerate(cummulative_time):
-        if initial <= timestamp <= cummulative_time[i+1]:
-            c1 = routes[vehicle_index]["coordinates"][i]
-            c2 = routes[vehicle_index]["coordinates"][i+1]
-            return calculate_intermediate_coordinate(c1, c2, 10 * 1000 /3600 , timestamp - initial) # TODO: Load velocity from front
-        elif timestamp >= cummulative_time[-1]:
-            print("Route ended!!")
-            return cummulative_time[-1]
-            # TODO: Add ending logic
+class Simulation:
+    def __init__(self, routes, distance_matrix, velocity = 10): # TODO: Load velocity from front
+        self.routes = routes
+        self.distance_matrix = distance_matrix
+        self.velocity = velocity
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        pass
+
+    def return_location(self, vehicle_index, timestamp):
+        cummulative_time = [self.distance_matrix[i][i+1] for i in self.routes[vehicle_index]["nodes"][:-1]]
+        cummulative_time = [0] + [sum(cummulative_time[:i+1]) for i in range(len(cummulative_time))]
+        for i, initial in enumerate(cummulative_time):
+            if initial <= timestamp <= cummulative_time[i+1]:
+                c1 = self.routes[vehicle_index]["coordinates"][i]
+                c2 = self.routes[vehicle_index]["coordinates"][i+1]
+                return calculate_intermediate_coordinate(c1, c2, self.velocity * 0.277777 , timestamp - initial)
+            elif timestamp >= cummulative_time[-1]:
+                print("Route ended!")
+                return cummulative_time[-1]
+                # TODO: Add ending logic
 
 
 
