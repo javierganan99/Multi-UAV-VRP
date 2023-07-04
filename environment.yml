@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python
-  - ortools-python
+  # - ortools-python
   - pytest
   - pyyaml
   - unidecode
