@@ -7,5 +7,6 @@ dependencies:
   - pytest
   - pyyaml
   - unidecode
-
+  - flask
+  
 # Install gmplot using pip install gmplot
