@@ -28,6 +28,27 @@ def load_yaml(file):
         params = yaml.safe_load(f)
     return params
 
+def save_yaml(file, data):
+    """
+    This function save data in a yaml file
+    """
+    with open(file, 'w') as file:
+        yaml.dump(data, file)
+
+
+def ensure_exist(path):
+    """
+    This function checks if path exist else create it
+    """
+    separated = path.split("/")
+    exists = True
+    for f in range(len(separated)):
+        path = os.path.join(*separated[: f + 1])
+        if not os.path.exists(path):
+            os.mkdir(path)
+            exists = False
+    return exists
+
 
 # def generate_random_map(area_dims, n_points, depot_coords=[0, 0, 0], max_inspecting_time=300):
 #     """

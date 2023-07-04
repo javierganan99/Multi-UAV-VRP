@@ -6,10 +6,6 @@ def load_problem_definiton(file="cfg/problem_definition.yaml"):
     Loads the definition for the problem
     """
     data = load_yaml(file)
-    # if "distance_matrix" not in data.keys():
-    #     from utils.problem_definiton import generate_distance_matrix
-
-    #     data["distance_matrix"] = generate_distance_matrix(data["addresses"])
     return data
 
 

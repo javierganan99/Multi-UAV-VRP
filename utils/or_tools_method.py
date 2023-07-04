@@ -10,9 +10,10 @@ def find_routes(problem_data, routing_data):
     for i in range(len(problem_data["distance_matrix"])):
         for j in range(len(problem_data["distance_matrix"][i])):
             problem_data["distance_matrix"][i][j] /= 0.277778 * problem_data["velocity"]
+            problem_data["distance_matrix"][i][j] = int(problem_data["distance_matrix"][i][j])
 
     # Create the routing index manager
-    manager = pywrapcp.RoutingIndexManager(len(problem_data["distance_matrix"]), problem_data["n_vehicles"], 0)
+    manager = pywrapcp.RoutingIndexManager(len(problem_data["distance_matrix"]), problem_data["n_vehicles"], problem_data['start_nodes'], problem_data['end_nodes'])
     # Create Routing Model
     routing = pywrapcp.RoutingModel(manager)
 
