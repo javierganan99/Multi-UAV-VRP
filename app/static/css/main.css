@@ -1,5 +1,6 @@
-body, html {
-    background-color: rgb(249,249,249);
+body,
+html {
+  background-color: rgb(249, 249, 249);
 }
 
 .title-box {
@@ -14,7 +15,7 @@ body, html {
 }
 
 .boxh {
-  width: 50%; 
+  width: 50%;
   float: left;
   margin-bottom: 20px;
 }
@@ -60,7 +61,9 @@ body, html {
   margin: 2px;
 }
 
-.blue-button:hover, .small-blue-button:hover, .custom-dropdown:hover {
+.blue-button:hover,
+.small-blue-button:hover,
+.custom-dropdown:hover {
   background-color: #0056b3;
 }
 
@@ -104,10 +107,56 @@ label {
 
 .custom-dropdown {
   background-color: #3970ab;
-  color: #fff; 
+  color: #fff;
   border: none;
   padding: 10px;
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
+}
+
+/* Pop up for the tracking of the vehicles*/
+
+#popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  resize: both;
+  overflow: auto;
+}
+
+#popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+#popup-title {
+  font-weight: bold;
+}
+
+#popup-controls {
+  display: flex;
+  align-items: center;
+}
+
+#popup-resize {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: #ccc;
+  cursor: nwse-resize;
+  margin-right: 5px;
+}
+
+#popup-close {
+  cursor: pointer;
 }

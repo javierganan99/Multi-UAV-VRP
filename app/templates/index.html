@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>VRP Web App</title>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+    integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+    crossorigin="anonymous"></script>
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+
+{% block body %}
+<div class="title-box">
+    <h1>VRP Google Maps</h1>
+</div>
+<div class="content">
+    <div class="column">
+        <div class="boxh">
+            <h2>{{ gettext("Addresses") }}</h2>
+            <form onsubmit="handleAddress(event);">
+                <input type="text" name="address" id="address">
+                <input type="submit" class="small-blue-button" value={% trans %}Add{% endtrans %}>
+            </form>
+        </div>
+
+        <div class="boxh">
+            <h2>{{ gettext("Depot Coordinates") }}</h2>
+            <form onsubmit="handleAddress(event, depot = true);">
+                <input type="text" name="depot" id="depot">
+                <input type="submit" class="small-blue-button" value={% trans %}Set{% endtrans %}>
+            </form>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    <div class="column">
+        <h2>{% trans %}Problem definition{% endtrans %}</h2>
+        <form onsubmit="generateRoutes(event);">
+            <label for="n_vehicles">{% trans %}Number of Vehicles{% endtrans %}</label>
+            <input type="number" id="n_vehicles" name="n_vehicles">
+            <span id="n_vehicles-warning" class="warning hidden">{% trans %}Please enter a valid number of vehicles{%
+                endtrans %}</span>
+
+            <label for="max_flight_time">{% trans %}Max Time per Vehicle [minutes]{% endtrans %}</label>
+            <input type="number" id="max_flight_time" name="max_flight_time">
+            <span id="max_flight_time-warning" class="warning hidden">{% trans %}Please enter a valid maximun time{%
+                endtrans %}</span>
+
+            <label for="capacity">{% trans %}Max Capacity per Vehicle{% endtrans %}</label>
+            <input type="number" id="capacity" name="capacity">
+            <span id="capacity-warning" class="warning hidden">{% trans %}Please enter a valid maximun capacity{%
+                endtrans %}</span>
+
+            <label for="velocity">{% trans %}Vehicle Velocity [km/h]{% endtrans %}</label>
+            <input type="number" id="velocity" name="velocity">
+            <span id="velocity-warning" class="warning hidden">{% trans %}Please enter a valid vehicle velocity{%
+                endtrans %}</span>
+            <br>
+            <br>
+            <button class="blue-button">{% trans %}Generate Routes{% endtrans %}</button>
+        </form>
+        <button class="blue-button" onclick="loadProblemDefiniton(event)">{% trans %}Load Problem Definition from File{%
+            endtrans %}</button>
+        <br>
+        <button class="blue-button" onclick="loadSolverConfiguration(event)">{% trans %}Load Solver Configuration{%
+            endtrans %}</button>
+        <br>
+        <button class="blue-button" onclick="reset(event)">{% trans %}Reset{% endtrans %}</button>
+        <br>
+    </div>
+    <div class="column">
+        <button class="blue-button" onclick="saveRoutes(event)">{% trans %}Save Routes{% endtrans %}</button>
+        <br>
+        <button class="blue-button" onclick="saveNodes(event)">{% trans %}Save Nodes{% endtrans %}</button>
+        <br>
+        <h2>{% trans %}Travel Mode{% endtrans %}</h2>
+        <select class="custom-dropdown" name="dropdown" id="travelmode" onchange="saveTravelMode(event)">
+            <option value="flight">{% trans %}Flight{% endtrans %}</option>
+            <option value="driving">{% trans %}Driving{% endtrans %}</option>
+            <option value="walking">{% trans %}Walking{% endtrans %}</option>
+            <option value="bicycling">{% trans %}Bycicling{% endtrans %}</option>
+            <option value="transit">{% trans %}Transit{% endtrans %}</option>
+        </select>
+
+        <button class="blue-button" id="simulation">{% trans %}Simulation{% endtrans
+            %}</button>
+        <!-- Popup window -->
+        <div id="popup">
+            <div id="popup-header">
+                <div id="popup-title">{% trans %}Vehicles Monitor{% endtrans %}</div>
+                <div id="popup-controls">
+                    <span id="popup-resize"></span>
+                    <span id="popup-close">X</span>
+                </div>
+            </div>
+            <!-- Container for the images -->
+            <div id="image-container"></div>
+        </div>
+    </div>
+</div>
+
+<div id="coordinatesList" coordinates="{{ coordinates|tojson }}"></div>
+<script src="{{ url_for('static',filename='js/variables.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/drawing.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/addresses.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/auxiliary.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/inference.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/simulation.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/monitor.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/load.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/map_creation.js', _external=True) }}"></script>
+<script src="{{ url_for('static',filename='js/save.js', _external=True) }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=getMap" async defer>
+</script>
+
+
+
+{% endblock %}

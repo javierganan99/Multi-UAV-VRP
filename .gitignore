@@ -3,4 +3,5 @@ __pycache__
 .pytest_cache
 tests/
 output/
+videos/
 todo.txt

@@ -1,7 +1,6 @@
-import signal
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from utils.auxiliary import measure_execution_time
+from app.utils.auxiliary import measure_execution_time
 
 
 @measure_execution_time
@@ -10,10 +9,16 @@ def find_routes(problem_data, routing_data):
     for i in range(len(problem_data["distance_matrix"])):
         for j in range(len(problem_data["distance_matrix"][i])):
             problem_data["distance_matrix"][i][j] /= 0.277778 * problem_data["velocity"]
-            problem_data["distance_matrix"][i][j] = int(problem_data["distance_matrix"][i][j])
-
+            problem_data["distance_matrix"][i][j] = int(
+                problem_data["distance_matrix"][i][j]
+            )
     # Create the routing index manager
-    manager = pywrapcp.RoutingIndexManager(len(problem_data["distance_matrix"]), problem_data["n_vehicles"], problem_data['start_nodes'], problem_data['end_nodes'])
+    manager = pywrapcp.RoutingIndexManager(
+        len(problem_data["distance_matrix"]),
+        problem_data["n_vehicles"],
+        problem_data["start_nodes"],
+        problem_data["end_nodes"],
+    )
     # Create Routing Model
     routing = pywrapcp.RoutingModel(manager)
 
@@ -42,15 +47,22 @@ def find_routes(problem_data, routing_data):
         dimension_name,
     )
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
-    distance_dimension.SetGlobalSpanCostCoefficient(problem_data["max_flight_time"] * 60)
+    distance_dimension.SetGlobalSpanCostCoefficient(
+        problem_data["max_flight_time"] * 60
+    )
 
     # Setting first solution heuristic
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    strategy_value = getattr(routing_enums_pb2.FirstSolutionStrategy, routing_data["first_solution_strategy"])
+    strategy_value = getattr(
+        routing_enums_pb2.FirstSolutionStrategy, routing_data["first_solution_strategy"]
+    )
     search_parameters.first_solution_strategy = strategy_value
 
     # Setting search strategy
-    strategy_value = getattr(routing_enums_pb2.LocalSearchMetaheuristic, routing_data["local_search_strategy"])
+    strategy_value = getattr(
+        routing_enums_pb2.LocalSearchMetaheuristic,
+        routing_data["local_search_strategy"],
+    )
     search_parameters.local_search_metaheuristic = strategy_value
 
     # Additional options to the routing problem
@@ -64,4 +76,9 @@ def find_routes(problem_data, routing_data):
         search_parameters.lns_time_limit.seconds = routing_data["lns_time_limit"]
 
     # Solve the problem and return the solution
-    return problem_data, manager, routing, routing.SolveWithParameters(search_parameters)
+    return (
+        problem_data,
+        manager,
+        routing,
+        routing.SolveWithParameters(search_parameters),
+    )

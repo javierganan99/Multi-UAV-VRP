@@ -8,5 +8,12 @@ dependencies:
   - pyyaml
   - unidecode
   - flask
+  - Flask-SocketIO
+  - python-engineio
+  - python-socketio
+  - Flask
+  - Werkzeug
+# - opencv-python
+  - numpy
   
 # Install gmplot using pip install gmplot

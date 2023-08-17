@@ -1,18 +1,18 @@
 import json
 import urllib.request
 from unidecode import unidecode
-from utils.load_parameters import load_iternal_parameters
 import numpy as np
 import math
 
 import math
 
-def calculate_haversine_distance(c1,c2):
+
+def calculate_haversine_distance(c1, c2):
     """
     Calculate distance between 2 coordinates using haversine formula.
     """
-    lat1,lon1 = c1
-    lat2,lon2 = c2
+    lat1, lon1 = c1
+    lat2, lon2 = c2
 
     lat1_rad = math.radians(lat1)
     lon1_rad = math.radians(lon1)
@@ -23,30 +23,42 @@ def calculate_haversine_distance(c1,c2):
     delta_lon = lon2_rad - lon1_rad
 
     # Haversine formula
-    a = math.sin(delta_lat/2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon/2) ** 2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    a = (
+        math.sin(delta_lat / 2) ** 2
+        + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+    )
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     # Radius of earth
     radius = 6371000
 
     return radius * c
 
+
 def generate_flight_distance_matrix(coordinates):
     """
-    Create distance matrix using haversine formula 
+    Create distance matrix using haversine formula
     """
     num_coordinates = len(coordinates)
     distance_matrix = [[0] * num_coordinates for _ in range(num_coordinates)]
 
     for i in range(num_coordinates):
-        for j in range(i+1, num_coordinates):
+        for j in range(i + 1, num_coordinates):
             distance = calculate_haversine_distance(coordinates[i], coordinates[j])
             distance_matrix[i][j] = distance
             distance_matrix[j][i] = distance
 
     return distance_matrix
 
-def generate_distance_matrix(addresses, mode="walking", max_elements = 10):
+
+def generate_distance_matrix(
+    addresses,
+    API_KEY,
+    GEOCODE_API_URL,
+    DISTANCE_MATRIX_API_URL,
+    mode="walking",
+    max_elements=10,
+):
     """
     Generate a distance matrix of the specified addresses.
     """
@@ -56,15 +68,25 @@ def generate_distance_matrix(addresses, mode="walking", max_elements = 10):
     def build_distance_matrix(response):
         distance_matrix = []
         for row in response["rows"]:
-            row_list = [row["elements"][j]["distance"]["value"] for j in range(len(row["elements"]))]
+            row_list = [
+                row["elements"][j]["distance"]["value"]
+                for j in range(len(row["elements"]))
+            ]
             distance_matrix.append(row_list)
         return np.array(distance_matrix)
-    
-    def fill_matrix(i,j, fullmatrix, submatrix):
-        fullmatrix[i: i + np.shape(submatrix)[0], j: j + np.shape(submatrix)[1]] = submatrix
+
+    def fill_matrix(i, j, fullmatrix, submatrix):
+        fullmatrix[
+            i : i + np.shape(submatrix)[0], j : j + np.shape(submatrix)[1]
+        ] = submatrix
         return fullmatrix
 
-    send_request = DistanceMatrixRequest(mode=mode)  # To perform request to Distance Matrix API
+    send_request = DistanceMatrixRequest(
+        mode=mode,
+        API_KEY=API_KEY,
+        GEOCODE_API_URL=GEOCODE_API_URL,
+        DISTANCE_MATRIX_API_URL=DISTANCE_MATRIX_API_URL,
+    )  # To perform request to Distance Matrix API
     num_addresses = len(addresses)
     max_rows = min(num_addresses, max_elements)
     if num_addresses < max_elements:
@@ -72,19 +94,23 @@ def generate_distance_matrix(addresses, mode="walking", max_elements = 10):
         r = 0
     else:
         q, r = divmod(num_addresses, max_elements)
-    distance_matrix = np.zeros((num_addresses,num_addresses))
+    distance_matrix = np.zeros((num_addresses, num_addresses))
     rest = 1 if r > 0 else 0
     ind_row = 0
     for i in range(q + rest):
-        origin_addresses = addresses[i * max_rows : min((i + 1) * max_rows, num_addresses)]
+        origin_addresses = addresses[
+            i * max_rows : min((i + 1) * max_rows, num_addresses)
+        ]
         ind_col = 0
         for j in range(q + rest):
-            dest_addresses = addresses[j * max_rows :  min((j + 1) * max_rows, num_addresses)]
+            dest_addresses = addresses[
+                j * max_rows : min((j + 1) * max_rows, num_addresses)
+            ]
             response = send_request(origin_addresses, dest_addresses)
             if response is None:
                 raise Exception("The distance matrix could not be calculated!")
             submatrix = build_distance_matrix(response)
-            distance_matrix = fill_matrix(ind_row,ind_col, distance_matrix, submatrix)
+            distance_matrix = fill_matrix(ind_row, ind_col, distance_matrix, submatrix)
             ind_col += len(submatrix[0])
         ind_row += len(submatrix)
     # Convert to int
@@ -93,22 +119,29 @@ def generate_distance_matrix(addresses, mode="walking", max_elements = 10):
 
 
 def detect_address_format(address: str):
-    if isinstance(address, list) and isinstance(address[0], (float, int)) and isinstance(address[1], (float, int)):
+    if (
+        isinstance(address, list)
+        and isinstance(address[0], (float, int))
+        and isinstance(address[1], (float, int))
+    ):
         return "float-coordinates"
     address = address.replace(" ", "").split(",")
-    if isinstance(address, list) and isinstance(address[0], (float, int)) and isinstance(address[1], (float, int)):
+    if (
+        isinstance(address, list)
+        and isinstance(address[0], (float, int))
+        and isinstance(address[1], (float, int))
+    ):
         return "str-coordinates"
     else:
         return "name"
 
 
 class AddressFormatConversion:
-    def __init__(self):
-        data = load_iternal_parameters()
+    def __init__(self, API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL):
         self.API_KEY, self.GEOCODE_API_URL, self.DISTANCE_MATRIX_API_URL = (
-            data["API_KEY"],
-            data["GEOCODE_API_URL"],
-            data["DISTANCE_MATRIX_API_URL"],
+            API_KEY,
+            GEOCODE_API_URL,
+            DISTANCE_MATRIX_API_URL,
         )
 
     def address2coords(self, address):
@@ -117,7 +150,11 @@ class AddressFormatConversion:
         """
         address = unidecode(address)
         jsonResult = urllib.request.urlopen(
-            self.GEOCODE_API_URL + "address=" + address.replace(" ", "+") + "&key=" + self.API_KEY
+            self.GEOCODE_API_URL
+            + "address="
+            + address.replace(" ", "+")
+            + "&key="
+            + self.API_KEY
         ).read()
         response = json.loads(jsonResult)
         if not response["results"]:
@@ -135,12 +172,13 @@ class DistanceMatrixRequest:
     First convert the addresses/coordinates into place ids and then perform the distance request
     """
 
-    def __init__(self, mode="DRIVING"):
-        data = load_iternal_parameters()
+    def __init__(
+        self, API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL, mode="DRIVING"
+    ):
         self.API_KEY, self.GEOCODE_API_URL, self.DISTANCE_MATRIX_API_URL = (
-            data["API_KEY"],
-            data["GEOCODE_API_URL"],
-            data["DISTANCE_MATRIX_API_URL"],
+            API_KEY,
+            GEOCODE_API_URL,
+            DISTANCE_MATRIX_API_URL,
         )
         self.mode = mode
         self.available_modes = ["driving", "walking", "bicycling", "transit"]
@@ -148,7 +186,11 @@ class DistanceMatrixRequest:
 
     def __build_address_str(self, address):
         jsonResult = urllib.request.urlopen(
-            self.GEOCODE_API_URL + "address=" + address.replace(" ", "+") + "&key=" + self.API_KEY
+            self.GEOCODE_API_URL
+            + "address="
+            + address.replace(" ", "+")
+            + "&key="
+            + self.API_KEY
         ).read()
         response = json.loads(jsonResult)
         if not response["results"]:
@@ -160,7 +202,11 @@ class DistanceMatrixRequest:
         return ",".join([str(coord) for coord in coords])
 
     def __add_to_str(self, data, global_str):
-        if isinstance(data, list) and isinstance(data[0], (float, int)) and isinstance(data[1], (float, int)):
+        if (
+            isinstance(data, list)
+            and isinstance(data[0], (float, int))
+            and isinstance(data[1], (float, int))
+        ):
             global_str += self.__build_coords_str(data)
         elif isinstance(data, str):
             resp = self.__build_address_str(data)

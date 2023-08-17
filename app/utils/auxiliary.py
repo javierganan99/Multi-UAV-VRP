@@ -1,6 +1,9 @@
 import yaml
 import os
 import time
+import cv2
+import base64
+import numpy as np
 
 
 # Decorators
@@ -16,6 +19,36 @@ def measure_execution_time(func):
     return wrapper
 
 
+def compress_frame(frame, codec="jpg"):
+    """
+    Frame compression usin cv2.imencode
+    """
+    _, compressed_frame = cv2.imencode("." + codec, frame)
+    return compressed_frame
+
+
+def decompress_frame(frame):
+    """
+    Decompress frame using a chosen codec
+    """
+    decompressed_frame = cv2.imdecode(frame, cv2.IMREAD_UNCHANGED)
+    return decompressed_frame
+
+
+def buffer2base64(buffer):
+    return base64.b64encode(buffer).decode("utf-8")
+
+
+def base642image(base64_string):
+    """
+    The base64_to_image function accepts a base64 encoded string and returns an image
+    """
+    image_bytes = base64.b64decode(base64_string)
+    image_array = np.frombuffer(image_bytes, dtype=np.uint8)
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    return image
+
+
 def load_yaml(file):
     """
     This function loads a yaml file into a dictionary
@@ -28,11 +61,12 @@ def load_yaml(file):
         params = yaml.safe_load(f)
     return params
 
+
 def save_yaml(file, data):
     """
     This function save data in a yaml file
     """
-    with open(file, 'w') as file:
+    with open(file, "w") as file:
         yaml.dump(data, file)
 
 
@@ -48,55 +82,6 @@ def ensure_exist(path):
             os.mkdir(path)
             exists = False
     return exists
-
-
-# def generate_random_map(area_dims, n_points, depot_coords=[0, 0, 0], max_inspecting_time=300):
-#     """
-#     Generates a random map, generating n_points in a area of dimensions area_dims[0]*area_dims[1] m^2
-#     """
-#     points = []
-#     points.append(depot_coords)
-#     while len(points) < n_points:
-#         x = random.randint(-area_dims[0] / 2, area_dims[0] / 2 - 1)
-#         y = random.randint(-area_dims[1] / 2, area_dims[1] / 2 - 1)
-#         insp_time = random.randint(0, max_inspecting_time)
-#         points.append([x, y, insp_time])
-#     return np.array(points)
-
-
-# def generate_distance_matrix(points, vel):
-#     """
-#     Create the time matrix between nodes (considering also the waiting time a each node)
-#     """
-#     num_points = len(points)
-#     distances = np.zeros((num_points, num_points), dtype=int)
-#     for i in range(num_points):
-#         for j in range(i + 1, num_points):
-#             distance = np.linalg.norm(points[i, :2] - points[j, :2])
-#             distances[i, j] = int(distance / vel + points[j, 2])
-#             distances[j, i] = int(distance / vel + points[i, 2])
-#     return distances.tolist()
-
-
-# def plot_routes(points, routes):
-#     """
-#     Plot the map and routes for each vehicle
-#     """
-#     plt.scatter(points[:, 0], points[:, 1], color="blue", label="Nodes")
-#     plt.scatter(points[0, 0], points[0, 1], color="red", label="Depot")
-#     for route in routes:
-#         plt.plot(points[route, 0], points[route, 1], linestyle="solid")
-#     plt.plot()
-#     for point in points:
-#         x = point[0]
-#         y = point[1]
-#         plt.text(x + 15, y + 15, str(point[2]), fontsize=10, verticalalignment="center", horizontalalignment="center")
-#     plt.xlabel("X [m]")
-#     plt.ylabel("Y [m]")
-#     plt.title("Generated Routes")
-#     plt.legend()
-#     plt.grid(True)
-#     plt.show()
 
 
 def generate_n_colors(n):
@@ -137,14 +122,18 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
             plan_output += " {} -> ".format(node)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
-            route_time += routing.GetArcCostForVehicle(previous_index, index, vehicle_id)
+            route_time += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id
+            )
         node = manager.IndexToNode(index)
         nodes.append(node)
         coordinates.append(coordinates_list[node])
         route_mins = route_time // 60
         route_secs = route_time % 60
         plan_output += "{}\n".format(manager.IndexToNode(index))
-        plan_output += "Time to complete the route: {}min {}secs\n".format(route_mins, route_secs)
+        plan_output += "Time to complete the route: {}min {}secs\n".format(
+            route_mins, route_secs
+        )
         print(plan_output)
         max_route_time = max(route_time, max_route_time)
         routes.append(nodes)
@@ -156,5 +145,9 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
     max_route_mins = max_route_time // 60
     max_route_secs = max_route_time % 60
     routes_dict["total_time"] = max_route_time
-    print("Time to complete the longest route: {}min {}secs\n".format(max_route_mins, max_route_secs))
+    print(
+        "Time to complete the longest route: {}min {}secs\n".format(
+            max_route_mins, max_route_secs
+        )
+    )
     return routes_dict
