@@ -75,6 +75,10 @@ def ensure_exist(path):
     This function checks if path exist else create it
     """
     separated = path.split("/")
+    # To consider absolute paths
+    if separated[0] == "":
+        separated.pop(0)
+        separated[0] = "/" + separated[0]
     exists = True
     for f in range(len(separated)):
         path = os.path.join(*separated[: f + 1])
