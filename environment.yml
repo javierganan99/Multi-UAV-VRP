@@ -17,3 +17,6 @@ dependencies:
   - numpy
   
 # Install gmplot using pip install gmplot
+# Install opencv manually
+# Install ortools manually
+# pip install flask-babel
