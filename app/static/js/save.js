@@ -33,28 +33,3 @@ function saveRoutes(event) {
     };
     xhr.send();
 }
-
-// Load the solver configuration defined in the yaml file
-function saveTravelMode() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/travel-mode", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    console.log("Travel mode successfully stored");
-                } else {
-                    console.error("Travel mode not valid: " + file, response.message);
-                }
-            } else {
-                console.error("Failed to communicate with the server:", xhr.status);
-            }
-        }
-    };
-    // Send the file as the request body
-    xhr.send("travelmode=" + encodeURIComponent(document.getElementById("travelmode").value));
-}
-
-saveTravelMode(); // At the start to load the default
