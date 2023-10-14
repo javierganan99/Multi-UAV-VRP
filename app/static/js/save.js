@@ -35,8 +35,7 @@ function saveRoutes(event) {
 }
 
 // Load the solver configuration defined in the yaml file
-function saveTravelMode(event) {
-    event.preventDefault();
+function saveTravelMode() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/travel-mode", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -57,3 +56,5 @@ function saveTravelMode(event) {
     // Send the file as the request body
     xhr.send("travelmode=" + encodeURIComponent(document.getElementById("travelmode").value));
 }
+
+saveTravelMode(); // At the start to load the default
