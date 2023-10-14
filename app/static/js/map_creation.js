@@ -1,9 +1,10 @@
 // Function to get the initial map
 function getMap(coordinates = null) {
     if (coordinates == null) {
-        var coordinatesList = document.getElementById("coordinatesList");
+        var coordinatesList = document.getElementById("map-center");
         var coordinates = JSON.parse(coordinatesList.getAttribute("coordinates"));
     }
+
     var mapOptions = {
         center: { lat: coordinates[0][0], lng: coordinates[0][1] },
         zoom: 12
@@ -13,17 +14,6 @@ function getMap(coordinates = null) {
 
     // Info window to share between markers
     infoWindow = new google.maps.InfoWindow();
-
-    // Add markers to the the map
-    for (let i = 0; i < coordinates.length; i++) {
-        if (i === 0) {
-            if (coordinates[i]) {
-                addMarker(coordinates[i], i, "blue");
-            }
-        } else {
-            addMarker(coordinates[i], i, "red");
-        }
-    }
 
     // Listener to add a marker when the map is clicked
     google.maps.event.addListener(map, "click", (event) => {
