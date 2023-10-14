@@ -5,4 +5,4 @@ tests/
 output/
 videos/
 todo.txt
-.pot
+*.pot
