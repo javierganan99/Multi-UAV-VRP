@@ -1,16 +1,13 @@
-from flask import Blueprint, current_app, request, jsonify
+from flask import Blueprint, current_app, request, jsonify, Response
 from flask_babel import gettext
-from app.messaging.sockets import create_client_socket, create_server_socket
-from app.concurrency.processes import create_processes, start_processes, wait_processes
-import threading
-from multiprocessing import Event
-from app.messaging.queue import RTQueue
+from app.utils.simulation import SimulationPath
+import json
 
 # Define a Flask blueprint for handling simulation-related routes
 simulation_blueprint = Blueprint("simulation_blueprint", __name__)
 
 
-@simulation_blueprint.route("/start-simulation", methods=["POST"])
+@simulation_blueprint.route("/simulation")
 def start_simulation(HOST="localhost", PORT=999):
     """
     TODO: Provide a more insightful description!
@@ -21,46 +18,28 @@ def start_simulation(HOST="localhost", PORT=999):
     HOST (str, optional): Host of the server. Default is "localhost".
     PORT (int, optional): Port number the server listens to. Default is 999.
     """
-    if request.method == "POST":
-        current_app.simulation = True
-        image_queues = [
-            RTQueue() for _ in range(current_app.problem_data["n_vehicles"])
-        ]  # To store the images received by the vehicles
-        stop_event = Event()  # To stop the server thread and the client processes
-        # Create server socket process to add images of the vehicles to the queue
-        server_socket_producer = threading.Thread(
-            target=create_server_socket,
-            args=(HOST, PORT, image_queues, stop_event),
-            daemon=True,
-        )
-        server_socket_producer.start()
-        # TODO: Change the sources
-        client_processes = create_processes(
-            current_app.problem_data["n_vehicles"],
-            create_client_socket,
-            stop_flag=stop_event,
-            args_list=[
-                *[
-                    [HOST, PORT, r"C:\Users\a907303\GitHub\VRP\videos\newzeland.mp4"]
-                    for i in range(current_app.problem_data["n_vehicles"] - 1)
-                ],
-                [HOST, PORT, 0],
-            ],
-        )
 
-        # We start the processes
-        start_processes(client_processes)
+    def stream(simulation, simulation_path):
+        while simulation:
+            try:
+                coords = next(simulation_path)
+                string_data = f"data: {json.dumps(coords)}\n\n"
+                yield string_data
+            except StopIteration:
+                return "data: None\n\n"
 
-        while current_app.simulation:
-            for i in range(current_app.problem_data["n_vehicles"]):
-                current_app.vehicles_namespace.emit_image(image_queues[i].get(), i)
-                image_queues[i].task_done()
-        stop_event.set()
-        # Wait for the client processes
-        wait_processes(client_processes)
-        # We for the server thread
-        server_socket_producer.join()
-        return jsonify(success=True, message=gettext("Simulation ended!"))
+    current_app.simulation = True
+    # Define simulation path
+    simulation_path = SimulationPath(
+        current_app.routes["routes"],
+        current_app.problem_data["distance_matrix"],
+        timestep=current_app.problem_data["simulation_time_step"],
+        decrease_factor=current_app.problem_data["simulation_time_step_factor"],
+    )
+    return Response(
+        stream(current_app.simulation, simulation_path),
+        mimetype="text/event-stream",
+    )
 
 
 @simulation_blueprint.route("/stop-simulation", methods=["POST"])
