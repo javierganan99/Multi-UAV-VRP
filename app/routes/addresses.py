@@ -57,7 +57,6 @@ def update_problem_when_deleted(index):
         current_app.problem_data["start_nodes"].remove(index)
     if index in current_app.problem_data["end_nodes"]:
         current_app.problem_data["end_nodes"].remove(index)
-    print(len(current_app.problem_data["addresses"]))
     current_app.problem_data["addresses"].pop(index)
 
 
