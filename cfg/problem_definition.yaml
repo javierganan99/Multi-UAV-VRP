@@ -1,10 +1,11 @@
 travel_mode: flight
 n_vehicles: 6 # Number of vechicles
-velocity: 10 # Max velocity of each vehicle [km/h]
-max_flight_time: 300 # Maximun time per vehicle [minutes]
-capacity: 10 # Maximun capacity per vehicle
-start_nodes: [2,8,16,59,89,34]
-end_nodes: [0,0,0,0,0,0]
+start_nodes: [1,2,3,4,5,6] # Departure depots nodes
+end_nodes: [2,8,16,59,89,34] # Arrival depots nodes
+max_flight_time: [250, 250, 250, 200, 275, 250] # Maximun time per vehicle [minutes]
+velocity: [10, 20, 10, 12, 8, 10] # Max velocity of each vehicle [km/h]
+simulation_time_step: 10 # Real timestep in seconds for the simulation (NOT LESS THAN A SECOND RECOMENDED)
+simulation_time_step_factor: 0.01 # Factor to accelerate the simulation (seconds_in_simulation = 'simulation_time_step_factor' * seconds_in_reality)
 addresses:
 - - 37.3830519
   - -5.9902257
