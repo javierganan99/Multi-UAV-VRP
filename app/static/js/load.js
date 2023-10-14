@@ -2,7 +2,6 @@
 // Load the problem definition from the yaml file and represent it in the frontend
 function loadProblemDefiniton(event, file = "cfg/problem_definition.yaml") {
     event.preventDefault();
-    var check_list = ["n_vehicles", "max_flight_time", "capacity", "velocity"];
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/load-problem", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -13,14 +12,22 @@ function loadProblemDefiniton(event, file = "cfg/problem_definition.yaml") {
                 if (response.success) {
                     console.log("Probem definition properly loaded");
                     for (let i = 0; i < check_list.length; i++) {
-                        document.getElementById(check_list[i]).value = response.problem_data[check_list[i]];
+                        if (check_list.slice(1).includes(check_list[i])) {
+                            if (Array.isArray(response.problem_data[check_list[i]])) {
+                                to_display =  response.problem_data[check_list[i]].join(', ');
+                            }
+                            // TODO: Manage the error
+                        } else {
+                            to_display = response.problem_data[check_list[i]];
+                        }
+                        document.getElementById(check_list[i]).value = to_display
                     }
-                    addMarker(response.problem_data["coord_inds"][0][0], response.problem_data["coord_inds"][0][1], "blue")
-                    // Update number of streams
-                    updateNumStreams(response.problem_data["n_vehicles"]);
-                    for (let i = 1; i < response.problem_data["addresses"].length; i++) {
-                        addMarker(response.problem_data["coord_inds"][i][0], response.problem_data["coord_inds"][i][1], "red")
-                    }
+                    // Update number of vehicles
+                    n_vehicles = response.problem_data["n_vehicles"];
+                    // Delete the current problem data
+                    deleteAllMarkers();
+                    // Draw problem data
+                    drawProblemData(response.problem_data);
                 } else {
                     // Some error in the definition of the problem
                     console.error(response.message);
