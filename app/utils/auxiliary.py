@@ -4,6 +4,8 @@ import time
 import cv2
 import base64
 import numpy as np
+import re
+from typing import Dict
 
 
 # Decorators
@@ -17,6 +19,17 @@ def measure_execution_time(func):
         return result
 
     return wrapper
+
+
+def string2value(input_str):
+    parts = input_str.split(",")
+    parts = [p.strip() for p in parts if p.strip() != ""]
+    if len(parts) == 1:
+        return int(parts[0])
+    elif len(parts) > 1:
+        return [int(i) for i in parts]
+    else:
+        return False
 
 
 def compress_frame(frame, codec="jpg"):
@@ -49,16 +62,30 @@ def base642image(base64_string):
     return image
 
 
-def load_yaml(file):
+def load_yaml(file: str = "data.yaml") -> Dict:
     """
-    This function loads a yaml file into a dictionary
+    Load a YAML file into a dictionary.
+
+    Args:
+        file (str): Path to the YAML file (default is "data.yaml").
+
+    Returns:
+        Dict: Dictionary containing the contents of the YAML file.
     """
     assert os.path.exists(file), "File not found in path {}".format(file)
     assert isinstance(file, str) and file.endswith(
         ".yaml"
     ), "Not the proper format, must be a yaml file string variable"
-    with open(file, "r") as f:
-        params = yaml.safe_load(f)
+    with open(file, errors="ignore", encoding="utf-8") as f:
+        s = f.read()  # string
+        # Remove special characters
+        if not s.isprintable():
+            s = re.sub(
+                r"[^\x09\x0A\x0D\x20-\x7E\x85\xA0-\uD7FF\uE000-\uFFFD\U00010000-\U0010ffff]+",
+                "",
+                s,
+            )
+        params = yaml.safe_load(s)
     return params
 
 
@@ -70,18 +97,20 @@ def save_yaml(file, data):
         yaml.dump(data, file)
 
 
-def ensure_exist(path):
-    """
-    This function checks if path exist else create it
-    """
-    separated = path.split("/")
+def ensure_folder_exist(path):
+    path = str(path)
+    separated = path.split(os.path.sep)
     # To consider absolute paths
     if separated[0] == "":
         separated.pop(0)
-        separated[0] = "/" + separated[0]
+        separated[0] = os.path.sep + separated[0]
     exists = True
     for f in range(len(separated)):
-        path = os.path.join(*separated[: f + 1])
+        path = (
+            os.path.sep.join(separated[: f + 1])
+            if f > 0
+            else (separated[0] + os.path.sep)
+        )
         if not os.path.exists(path):
             os.mkdir(path)
             exists = False
@@ -105,6 +134,7 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
     """
     Generates a dictionary with the routing data
     """
+    # TODO: SOLVE LAST PATH COMPUTATION!
     print(f"Objective: {solution.ObjectiveValue()}")
     max_route_time = 0
     routes_dict = {}
@@ -116,7 +146,7 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
         routes_dict["routes"][vehicle_id] = {}
         index = routing.Start(vehicle_id)
         plan_output = "Route for vehicle {}:\n".format(vehicle_id)
-        route_time = 0
+        route_dist = 0
         nodes = []
         coordinates = []
         while not routing.IsEnd(index):
@@ -126,12 +156,14 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
             plan_output += " {} -> ".format(node)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
-            route_time += routing.GetArcCostForVehicle(
+            route_dist += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id
             )
         node = manager.IndexToNode(index)
         nodes.append(node)
         coordinates.append(coordinates_list[node])
+        velocity = data["velocity"][vehicle_id] * 0.2777777778
+        route_time = int(route_dist / velocity)
         route_mins = route_time // 60
         route_secs = route_time % 60
         plan_output += "{}\n".format(manager.IndexToNode(index))
@@ -146,6 +178,7 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
         routes_dict["routes"][vehicle_id]["nodes"] = nodes
         routes_dict["routes"][vehicle_id]["time"] = route_time
         routes_dict["routes"][vehicle_id]["color"] = colors[vehicle_id]
+        routes_dict["routes"][vehicle_id]["velocity"] = velocity
     max_route_mins = max_route_time // 60
     max_route_secs = max_route_time % 60
     routes_dict["total_time"] = max_route_time
