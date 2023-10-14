@@ -16,6 +16,7 @@ def load_yaml_problem():
     if request.method == "POST":
         file = request.form["file"]
         current_app.problem_data = load_problem_definiton(file)
+        # Addresses to the proper format
         for i, address in enumerate(current_app.problem_data["addresses"]):
             format = detect_address_format(address)
             if format == "str-coordinates":
@@ -31,14 +32,11 @@ def load_yaml_problem():
                     coordinates=None,
                 )
             coordinates = [float(i) for i in coordinates]
-            if i == 0:
-                current_app.coordinates_list[0] = coordinates
-                idx = 0
-            elif coordinates not in current_app.coordinates_list:
-                current_app.coordinates_list.append(coordinates)
-                idx = len(current_app.coordinates_list) - 1
+            if coordinates not in current_app.problem_data["addresses"]:
+                current_app.problem_data["addresses"].append(coordinates)
+                idx = len(current_app.problem_data["addresses"]) - 1
             else:
-                idx = current_app.coordinates_list.index(coordinates)
+                idx = current_app.problem_data["addresses"].index(coordinates)
             coord_inds.append((coordinates, idx))
             current_app.problem_data["coord_inds"] = coord_inds
         return jsonify(
