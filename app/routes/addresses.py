@@ -6,6 +6,7 @@ from flask_babel import gettext
 addresses_blueprint = Blueprint("addresses_blueprint", __name__)
 
 
+# TODO: Add node
 @addresses_blueprint.route("/handle-address", methods=["POST", "GET"])
 def register_address():
     """
@@ -30,7 +31,7 @@ def register_address():
             )
         coordinates = [float(i) for i in coordinates]
         if depot != "false":
-            current_app.coordinates_list[0] = coordinates
+            current_app.problem_data["addresses"][0] = coordinates
             return jsonify(
                 success=True,
                 message=gettext("Depot registered successfully"),
@@ -38,17 +39,26 @@ def register_address():
                 index=0,
             )
         else:
-            if coordinates not in current_app.coordinates_list:
-                current_app.coordinates_list.append(coordinates)
-                index = len(current_app.coordinates_list) - 1
+            if coordinates not in current_app.problem_data["addresses"]:
+                current_app.problem_data["addresses"].append(coordinates)
+                index = len(current_app.problem_data["addresses"]) - 1
             else:
-                index = current_app.coordinates_list.index(coordinates)
+                index = current_app.problem_data["addresses"].index(coordinates)
             return jsonify(
                 success=True,
                 message=gettext("Address registered successfully"),
                 coordinates=coordinates,
                 index=index,
             )
+
+
+def update_problem_when_deleted(index):
+    if index in current_app.problem_data["start_nodes"]:
+        current_app.problem_data["start_nodes"].remove(index)
+    if index in current_app.problem_data["end_nodes"]:
+        current_app.problem_data["end_nodes"].remove(index)
+    print(len(current_app.problem_data["addresses"]))
+    current_app.problem_data["addresses"].pop(index)
 
 
 @addresses_blueprint.route("/delete-address", methods=["POST", "GET"])
@@ -58,10 +68,9 @@ def delete_address():
     """
     if request.method == "POST":
         index = int(request.form["index"])
-        if current_app.coordinates_list and index != 0:
-            current_app.coordinates_list.pop(index)
+        update_problem_when_deleted(index)
         return jsonify(
             success=True,
             message=gettext("Address deleted successfully"),
-            coordinates=current_app.coordinates_list,
+            problem_data=current_app.problem_data,
         )
