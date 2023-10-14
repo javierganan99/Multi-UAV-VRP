@@ -113,7 +113,6 @@ def generate_distance_matrix(
             distance_matrix = fill_matrix(ind_row, ind_col, distance_matrix, submatrix)
             ind_col += len(submatrix[0])
         ind_row += len(submatrix)
-    # Convert to int
     distance_matrix = distance_matrix.astype(int)
     return distance_matrix.tolist()
 
