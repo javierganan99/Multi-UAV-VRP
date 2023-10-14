@@ -6,3 +6,4 @@ output/
 videos/
 todo.txt
 *.pot
+api_key.txt
