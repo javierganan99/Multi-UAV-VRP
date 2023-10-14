@@ -1,4 +1,6 @@
 class Config:
+    APP_HOST = "0.0.0.0"
+    APP_PORT = 5000
     DEBUG = True
     API_KEY = "AIzaSyCdgVOZfVHSb-OjcC2EfMkgbHztnY4pH_4"
     GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json?"
