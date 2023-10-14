@@ -27,10 +27,8 @@ function addAddress(address, color, depot = false) {
                 if (response.success) {
                     // Draw the marker
                     if (response.index == 0 || response.index == markers.length) {
-                        console.log("NEW DIRECTION!")
                         addMarker(response.coordinates, response.index, color);
                     } else {
-                        console.log("ALREADY REGISTERED!")
                     }
                 } else {
                     // Failed to convert address
