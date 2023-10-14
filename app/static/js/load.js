@@ -1,6 +1,6 @@
 // Depends on monitor.js, that must be included before this file in index.html 
 // Load the problem definition from the yaml file and represent it in the frontend
-function loadProblemDefiniton(event, file = "cfg/problem_definition.yaml") {
+function loadProblemDefiniton(event) {
     event.preventDefault();
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/load-problem", true);
@@ -39,7 +39,7 @@ function loadProblemDefiniton(event, file = "cfg/problem_definition.yaml") {
         }
     };
     // Send the file as the request body
-    xhr.send("file=" + encodeURIComponent(file));
+    xhr.send();
 }
 
 // Load the solver configuration defined in the yaml file

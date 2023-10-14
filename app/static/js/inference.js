@@ -71,6 +71,7 @@ function generateRoutes(event) {
     for (let i = 0; i < check_list.length - 1; i++) {
         url += check_list[i] + "=" + encodeURIComponent(document.getElementById(check_list[i]).value) + "&";
     }
+    url += "travel_mode" + "=" + encodeURIComponent(document.getElementById("travel_mode").value) + "&";
     url += check_list[check_list.length - 1] + "=" + encodeURIComponent(document.getElementById(check_list[check_list.length - 1]).value);
     xhr.send(url);
 }

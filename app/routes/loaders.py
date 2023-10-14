@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request, jsonify
-from app.utils.problem_definiton import detect_address_format
-from app.utils.load_parameters import load_problem_definiton, load_solver_configuration
+from utils.problem_definiton import detect_address_format
+from utils.load_parameters import load_problem_definiton, load_solver_configuration
 from flask_babel import gettext
 
 # Define a Flask blueprint for handling loading-related routes
@@ -14,8 +14,7 @@ def load_yaml_problem():
     """
     coord_inds = []
     if request.method == "POST":
-        file = request.form["file"]
-        current_app.problem_data = load_problem_definiton(file)
+        current_app.problem_data = load_problem_definiton()
         # Addresses to the proper format
         for i, address in enumerate(current_app.problem_data["addresses"]):
             format = detect_address_format(address)

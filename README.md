@@ -1,78 +1,116 @@
-# VRP Solver Using Google Maps
+# Multi-UAV Vehicle Routing Problem
 
-This repository uses or-tools to solve the Vehicle Routing Problem (VRP) problem for a given set of vehicles and nodes to visit. It uses the Google Maps API to manage the locations of interest and represent the routes for each vehicle.
+This repository provides an Human-Machine Interface (HMI) to solve the Vehicle Routing Problem (VRP) for a heterogeneous swarm of Unmanned Aerial Vehicles (UAVs). It optimizes the time in which **N** UAVs visit **M** locations, considering the diverse capabilities of each vehicle and adhering to each drone's restrictions.
 
-## Author
+## 📋 Features
 
-Francisco Javier Gañán
+- [x] **Multi-depot**: Define several departure and arrival depots. Each UAV can take off and land at different locations.
 
-Affiliation: GRVC Robotics Lab, University of Seville
+- [x] **Heterogeneity**: Each vehicle can possess distinct capabilities, including various velocities and battery requirements (maximum time of flight).
 
-Mail: fjganan14@gmail.com
+- [x] **HMI**: Interact with the web application to define the problem interactively. Add addresses or coordinates to visit, and specify each vehicle's capabilities. Generate, simulate, and save the routes and the problem definition. Configuration files are also supported.
 
-## Installation
+- [x] **Simulation**: Simulate the route generation and real-time execution of UAVs.
 
-1. Untar the project in the dersired parent folder of the repository.
-    ```
-    cd /folder_containing_the_tar_file
-    ```
+- [x] [**OR-Tools**](https://developers.google.com/optimization): Currently leveraging the [OR-Tools open-source library for combinatorial optimization](https://github.com/google/or-tools) to compute the routes. Other methods can be seamlessly integrated (see [Routes Computation](#🗺️-routes-computation) section).
 
-    ```
-    tar -xf VRP.tar.xz --directory /parent_folder_of_the_repo
+- [ ] **Replanning**: Routes recomputation when the original problem definition changes (vehicle lost, new vehicle addition, etc). 
 
-    ```
+## ⚙️ Installation
 
-2. Create a conda environment.
+1. To install Multi-UAV-VRP you can create a conda environment (optional).
 
-    ```
-    conda env create -f environment.yml
-
-    ```
-3. Install gmplot using pip.
-
-    ```
-    pip install gmplot
-    ```
-
-## Usage
-
-1. Activate conda environment.
-
-    ```
-    cd /parent_folder_of_the_repo/VRP
-    ```
-
-    ```
+```ssh
+    conda create --name vrp
     conda activate vrp
+```
+
+2. Clone the repository.
+
+```ssh
+    git clone https://github.com/javierganan99/Multi-UAV-VRP.git
+    cd Multi-UAV-VRP
+```
+
+3. Install the requirements.
+
+```ssh
+    pip install -r requirements.txt
+```
+
+## 🖥️ Usage
+
+To use the HMI, you need a [Google Maps API Key](https://developers.google.com/maps/documentation/javascript/get-api-key) to load the map into the webpage. 
+
+1. Set your Google Maps API Key as an enviroment variable.
+    
+    Linux and Mac:
+    ```ssh
+    export MAPS_API_KEY=<YOUR_API_KEY>
     ```
 
-2. Substitute YOUR_API_KEY for your Google Maps API_KEY in the *internal.yaml* file and in the follwing part of the *index.html* file:
-
-    ```html
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY=getMap" async defer>
-    </script>
+    Windows:
     ```
-
-3. Launch the app.
+    setx MAPS_API_KEY <YOUR_API_KEY>
+    ```
+2. Launch the web app.
 
     ```
-    python3 main.py
+    python3 /path/to/Multi-UAV-VRP/main.py
     ```
 
-4. The app has the following functionalities:
+## ✍🏼 Problem Definition
 
-    -  You can add the addresses in the coordinates or written direction formats with the **Add Address** button. The same for the **Depot** button.
+You can define the problem using configuration files, the HMI, or a hybrid approach.
 
-    - You can load the problem and solver configurations from given files (defined in the *cfg* folder). Use the buttons **Load Problem Definition from File** and **Load Solver Configuration**, respectively.
+The default problem definiton is located at **/path/to/Multi-UAV-VRP/cfg/problem_definition.yaml** file. You can load it to the HMI using the **Load Problem Definition from File** button.
 
-    - You can configure and modify the problem definition: 
-        - The directions, by adding new ones by clicking in the map desired location, or deleting them hovering the mouse over the markers and clicking the delete option.
-        - The problem definition within the problem definition section.
+Within the HMI, you can overwrite the following problem elements: 
+    
+- **Number of vehicles**: The **N** number of UAVs.
+- **Maximun time-of-fligh per vehicle**: A list of **N** times in the format *t1, t2, ..., tn*.
+- **Velocity of each vehicle**: A list of **N** velocities in the format *v1, v2, ..., vn*.
+- **Departure depots**: Introduce the **N** departure locations' indexes in a list *i1, i2, ..., in*.
+- **Arrival depots**: The same as **Departure depots** but for the arrival depots of the drones.
 
-    - You can also generate routes, save the nodes and current routes, and select the travel mode with the corresponding buttons. Saved yaml files will be stores in the *output* folder of the project.
+You can also add or delete the locations to visit. Use the **Directions** text box or click the position on the map to add a direction. The **Directions** text box accepts human-readable directions (e.g., *La giralda, Seville*), and *latitude, longitude* coordinates (e.g., *37.411872181, -6.001852909*). To delete locations, hover over the map location marker and click *Delete*.
 
-## Notes for the continuer
+The *Travel mode* can be selected in the HMI, supporting the following modes: *Flight, Driving, Walking, Biking, and Transit*. Except for *Flight*, all modes compute the distance between each location using the [Distace Matrix Google API](https://developers.google.com/maps/documentation/distance-matrix). In the *flight* mode, the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) is employed without using any external API.
 
-    This is a project under development, and not structured and documented the best way. I am probably missing something, so do not hesitate to contact me if you do need some help to understand anything or to continue with the work!
+> Note that although UAVs often fly without restrictions between 2 locations, certain applications such as surveillance or monitoring might require the drones to follow specific paths, like roads, bike paths, or pedestrian paths. For such cases, the travel distance is estimated more precisely using suitable travel modes.
 
+> ⚠️ If you use a *Travel mode* other than the *Flight* mode and your problem includes more than ~50 locations, be cautious. Calculating the **Distance Matrix** might take too long for time-critical applications. Additionally, excessive use of the HMI (specially in modes other than *Flight*) may incur costs due to exceeding the free [Distace Matrix Google API](https://developers.google.com/maps/documentation/distance-matrix) requests.
+
+## 🗺️ Routes Computation
+
+We currently support [OR-Tools open-source Python library](https://github.com/google/or-tools) for routes calculation. It is [well-documented](https://developers.google.com/optimization/reference/python/index_python) and provides [useful utilities for routing problems](https://developers.google.com/optimization/reference/python/constraint_solver/pywrapcp), such as the VRP. Refer to their [guide](https://developers.google.com/optimization/routing) for examples related to the VRP problem.
+
+In this project, we define the `find_routes` function in the **/path/to/Multi-UAV-VRP/app/utils/or_tools_method.py** file to compute optimized routes. You can modify this function or create a new one to solve the VRP with other methods. Define your problem related parameters and your method's parameters in the **/path/to/Multi-UAV-VRP/cfg/problem_definition.yaml** and the **/path/to/Multi-UAV-VRP/cfg/solver_configuration.yaml** configuration files, respectively. Your function should take input from both dictionaries.
+
+You can create another function to adapt the output format of the solution to be compatible with Multi-UAV VRP. We currently use `adapt_solution` function to convert the OR-Tools format to the required format.  This function should take the output of the `find_routes` function and produce a dictionary in the following format:
+```python
+result = {
+    'routes': {
+        # N vehicle IDs, should be integers from 0 to (N-1)
+        0: {
+             # Latitude and longitude list of nodes to visit
+            'coordinates': [(37.3830519, -5.9902257), (37.3842311, -5.9709563), ...],
+             # A list representing the indexes of the coordinates of the routes in the problem definition
+            'nodes': [20, 10, 2, ...],
+             # Estimated time to complete the route [s]
+            'time': 12069,
+            # Hexadecimal color to visualize the route path
+            'color': '#00FF00',
+            # Velocity of the vehicle [m/s]
+            'velocity': 3.2, 
+        }
+        1: ...
+    },
+    # Time to complete the longest route [s]
+    'total_time': 15000
+}
+```
+
+## 📬 Contact
+
+Francisco Javier Gañán - fjganan14@gmail.com

@@ -1,9 +1,9 @@
 from flask import Blueprint, current_app, request, jsonify
 from flask_babel import gettext
-from app.utils.load_parameters import load_solver_configuration, load_problem_definiton
-from app.utils.auxiliary import generate_solution, string2value
-from app.utils.or_tools_method import find_routes
-from app.utils.problem_definiton import (
+from utils.load_parameters import load_solver_configuration, load_problem_definiton
+from utils.auxiliary import adapt_solution, string2value
+from utils.or_tools_method import find_routes
+from utils.problem_definiton import (
     generate_distance_matrix,
     generate_flight_distance_matrix,
 )
@@ -39,6 +39,7 @@ def generate_route():
                     message=gettext("Error parsing the values of the problem data"),
                 )
             current_app.problem_data[name] = value
+        current_app.problem_data["travel_mode"] = request.form["travel_mode"]
         # Distance matrix creation
         if "distance_matrix" not in current_app.problem_data.keys():
             if current_app.problem_data["travel_mode"] == "flight":
@@ -59,7 +60,7 @@ def generate_route():
         data, manager, routing, solution = find_routes(
             current_app.problem_data, current_app.solver_data
         )
-        current_app.routes = generate_solution(
+        current_app.routes = adapt_solution(
             data, manager, routing, solution, current_app.problem_data["addresses"]
         )
         return jsonify(

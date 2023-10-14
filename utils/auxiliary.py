@@ -130,7 +130,7 @@ def generate_n_colors(n):
     return colors
 
 
-def generate_solution(data, manager, routing, solution, coordinates_list):
+def adapt_solution(data, manager, routing, solution, coordinates_list):
     """
     Generates a dictionary with the routing data
     """
@@ -179,6 +179,7 @@ def generate_solution(data, manager, routing, solution, coordinates_list):
         routes_dict["routes"][vehicle_id]["time"] = route_time
         routes_dict["routes"][vehicle_id]["color"] = colors[vehicle_id]
         routes_dict["routes"][vehicle_id]["velocity"] = velocity
+        print(velocity)
     max_route_mins = max_route_time // 60
     max_route_secs = max_route_time % 60
     routes_dict["total_time"] = max_route_time

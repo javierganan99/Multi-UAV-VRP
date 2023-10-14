@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, request, jsonify
-from app.utils.problem_definiton import detect_address_format
+from utils.problem_definiton import detect_address_format
 from flask_babel import gettext
 
 # Define a Flask blueprint for handling address-related routes

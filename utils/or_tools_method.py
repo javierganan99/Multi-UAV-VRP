@@ -1,6 +1,6 @@
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from app.utils.auxiliary import measure_execution_time
+from utils.auxiliary import measure_execution_time
 
 
 @measure_execution_time

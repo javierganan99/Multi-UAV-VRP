@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request, jsonify, Response
 from flask_babel import gettext
-from app.utils.simulation import SimulationPath
+from utils.simulation import SimulationPath
 import json
 
 # Define a Flask blueprint for handling simulation-related routes
