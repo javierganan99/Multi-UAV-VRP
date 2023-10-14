@@ -7,7 +7,7 @@ from flask import (
     send_from_directory,
     Flask,
 )
-from app.utils.problem_definiton import AddressFormatConversion
+from utils.problem_definiton import AddressFormatConversion
 from app.routes.addresses import addresses_blueprint
 from app.routes.loaders import loaders_blueprint
 from app.routes.save import save_blueprint
@@ -49,11 +49,15 @@ def custom_image(filename):
 
 @app.route("/reset", methods=["POST"])
 def reset():
-    if request.method == "POST":
-        current_app.problem_data["addresses"] = []  # Reset coordinates
-        current_app.problem_data = {}  # Reset problem definition
-        current_app.solver_data = {}  # Reset solver definiton
-        return jsonify(success=True, message=gettext("Reset done"))
+    current_app.problem_data = {}  # Reset problem definition
+    current_app.solver_data = {}  # Reset solver definiton
+    current_app.routes = {}  # Reset the routes
+    current_app.problem_data["addresses"] = []
+    current_app.problem_data["start_nodes"] = []
+    current_app.problem_data["end_nodes"] = []
+    current_app.problem_data["n_vehicles"] = 1
+    current_app.simulation = False
+    return jsonify(success=True, message=gettext("Reset done"))
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -67,11 +71,7 @@ def main():
         app.config["GEOCODE_API_URL"],
         app.config["DISTANCE_MATRIX_API_URL"],
     )
-    current_app.problem_data = {}
-    current_app.solver_data = {}
-    current_app.routes = {}
-    current_app.problem_data["n_vehicles"] = 2
-    current_app.simulation = False
+    reset()  # Initialize variables
 
     if request.method == "POST":
         try:
