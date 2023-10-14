@@ -1,4 +1,4 @@
-# Spanish translations for PROJECT.
+# Translations template for PROJECT.
 # Copyright (C) 2023 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
@@ -7,158 +7,179 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-07-07 00:15+0200\n"
-"PO-Revision-Date: 2023-07-07 00:16+0200\n"
+"POT-Creation-Date: 2023-10-13 09:46+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: es\n"
-"Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: main.py:42
+#: main.py:59
 msgid "Reset done"
-msgstr "Reset realizado"
+msgstr "Restablecimiento realizado"
 
-#: main.py:62
+#: main.py:81
 msgid "Error introducing the address"
-msgstr "Error introduciendo la dirección"
+msgstr "Error al introducir la dirección"
 
-#: app/routes/addresses.py:23 app/routes/loaders.py:26
+#: app/routes/addresses.py:28 app/routes/loaders.py:31
 msgid "Failed to convert address"
 msgstr "Fallo al convertir la dirección"
 
-#: app/routes/addresses.py:31
+#: app/routes/addresses.py:36
 msgid "Depot registered successfully"
-msgstr "Almacén registrado correctamente"
+msgstr "Depósito registrado con éxito"
 
-#: app/routes/addresses.py:43
+#: app/routes/addresses.py:48
 msgid "Address registered successfully"
-msgstr "Dirección registrada correctamente"
+msgstr "Dirección registrada con éxito"
 
-#: app/routes/addresses.py:57
+#: app/routes/addresses.py:65
 msgid "Address deleted successfully"
-msgstr "Dirección eliminada correctamente"
+msgstr "Dirección eliminada con éxito"
 
-#: app/routes/loaders.py:42 app/routes/loaders.py:54
+#: app/routes/loaders.py:47 app/routes/loaders.py:62
 msgid "Data loaded properly"
 msgstr "Datos cargados correctamente"
 
-#: app/routes/routes.py:50
-msgid "Routes created successfully"
-msgstr "Rutas creadas correctamente"
+#: app/routes/routes.py:37
+msgid "Error parsing the values of the problem data"
+msgstr "Error al analizar los valores de los datos del problema"
 
-#: app/routes/save.py:14
+#: app/routes/routes.py:62
+msgid "Routes created successfully"
+msgstr "Rutas creadas con éxito"
+
+#: app/routes/save.py:21
 msgid "Nodes saved"
 msgstr "Nodos guardados"
 
-#: app/routes/save.py:23
+#: app/routes/save.py:36
 msgid "Routes saved"
 msgstr "Rutas guardadas"
 
-#: app/routes/save.py:30
+#: app/routes/save.py:46
 msgid "Travel mode saved"
 msgstr "Modo de viaje guardado"
 
-#: app/templates/index.html:21
+#: app/routes/simulation.py:52
+msgid "Ending simulation..."
+msgstr "Finalizando simulación..."
+
+#: app/templates/index.html:26
 msgid "Addresses"
 msgstr "Direcciones"
 
-#: app/templates/index.html:24
-msgid "Add"
-msgstr "Añadir"
-
 #: app/templates/index.html:29
-msgid "Depot Coordinates"
-msgstr "Coordenadas del almacén"
+msgid "Add"
+msgstr "Agregar"
 
-#: app/templates/index.html:32
+#: app/templates/index.html:34
+msgid "Depot Coordinates"
+msgstr "Coordenadas del depósito"
+
+#: app/templates/index.html:37
 msgid "Set"
 msgstr "Establecer"
 
-#: app/templates/index.html:40
+#: app/templates/index.html:45
 msgid "Problem definition"
 msgstr "Definición del problema"
 
-#: app/templates/index.html:42
+#: app/templates/index.html:48
 msgid "Number of Vehicles"
 msgstr "Número de vehículos"
 
-#: app/templates/index.html:44
+#: app/templates/index.html:50
 msgid "Please enter a valid number of vehicles"
-msgstr "Por favor, introduce un número adecuado de vehículos"
+msgstr "Por favor, ingrese un número válido de vehículos"
 
-#: app/templates/index.html:47
+#: app/templates/index.html:53
 msgid "Max Time per Vehicle [minutes]"
 msgstr "Tiempo máximo por vehículo [minutos]"
 
-#: app/templates/index.html:49
-msgid "Please enter a valid maximun time"
-msgstr "Por favor, introduce un tiempo máximo adecuado"
+#: app/templates/index.html:55
+msgid "Please enter valid maximun times"
+msgstr "Por favor, ingrese tiempos máximos válidos"
 
-#: app/templates/index.html:52
+#: app/templates/index.html:58
 msgid "Max Capacity per Vehicle"
-msgstr "Máxima capacidad por vehículo"
+msgstr "Capacidad máxima por vehículo"
 
-#: app/templates/index.html:54
+#: app/templates/index.html:60
 msgid "Please enter a valid maximun capacity"
-msgstr "Por favor, introduce un valor de capacidad máxima adecuada"
-
-#: app/templates/index.html:57
-msgid "Vehicle Velocity [km/h]"
-msgstr "Velocidad de los vehículos [km/h]"
-
-#: app/templates/index.html:59
-msgid "Please enter a valid vehicle velocity"
-msgstr "Por favor, introduce una velocidad de vehículo válida"
+msgstr "Por favor, ingrese una capacidad máxima válida"
 
 #: app/templates/index.html:63
-msgid "Generate Routes"
-msgstr "Genera las rutas"
+msgid "Vehicle Velocity [km/h]"
+msgstr "Velocidad del vehículo [km/h]"
 
 #: app/templates/index.html:65
-msgid "Load Problem Definition from File"
-msgstr "Carga la definición del problema de archivo"
+msgid "Please enter a valid vehicle velocities"
+msgstr "Por favor, ingrese velocidades de vehículos válidas"
 
 #: app/templates/index.html:68
-msgid "Load Solver Configuration"
-msgstr "Carga la configuración del solver"
+msgid "Departure Depots"
+msgstr "Depósitos de salida"
 
-#: app/templates/index.html:71
-msgid "Reset"
-msgstr "Reset"
+#: app/templates/index.html:70 app/templates/index.html:75
+msgid "Please enter a valid number of depots"
+msgstr "Por favor, ingrese un número válido de depósitos"
 
-#: app/templates/index.html:75
-msgid "Save Routes"
-msgstr "Guarda las rutas"
-
-#: app/templates/index.html:77
-msgid "Save Nodes"
-msgstr "Guarda los nodos"
+#: app/templates/index.html:73
+msgid "Arrival Depots"
+msgstr "Depósitos de llegada"
 
 #: app/templates/index.html:79
+msgid "Generate Routes"
+msgstr "Generar Rutas"
+
+#: app/templates/index.html:82
+msgid "Load Problem Definition from File"
+msgstr "Cargar Definición de Problema desde Archivo"
+
+#: app/templates/index.html:85
+msgid "Load Solver Configuration"
+msgstr "Cargar Configuración del Solucionador"
+
+#: app/templates/index.html:88
+msgid "Reset"
+msgstr "Reiniciar"
+
+#: app/templates/index.html:92
+msgid "Save Routes"
+msgstr "Guardar Rutas"
+
+#: app/templates/index.html:94
+msgid "Save Nodes"
+msgstr "Guardar Nodos"
+
+#: app/templates/index.html:96
 msgid "Travel Mode"
 msgstr "Modo de viaje"
 
-#: app/templates/index.html:81
+#: app/templates/index.html:98
 msgid "Flight"
 msgstr "Vuelo"
 
-#: app/templates/index.html:82
+#: app/templates/index.html:99
 msgid "Driving"
-msgstr "Coche"
+msgstr "Conducción"
 
-#: app/templates/index.html:83
+#: app/templates/index.html:100
 msgid "Walking"
-msgstr "Caminando"
+msgstr "Caminata"
 
-#: app/templates/index.html:84
+#: app/templates/index.html:101
 msgid "Bycicling"
-msgstr "Bicicleta"
+msgstr "Ciclismo"
 
-#: app/templates/index.html:85
+#: app/templates/index.html:102
 msgid "Transit"
 msgstr "Tránsito"
 
+#: app/templates/index.html:104
+msgid "Simulation"
+msgstr "Simulación"
