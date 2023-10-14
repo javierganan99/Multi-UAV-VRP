@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request, jsonify
 from flask_babel import gettext
-from app.utils.auxiliary import save_yaml, ensure_folder_exist
+from utils.auxiliary import save_yaml, ensure_folder_exist
 
 # Define a Flask blueprint for handling saving-related routes
 save_blueprint = Blueprint("save_blueprint", __name__)
@@ -34,13 +34,3 @@ def save_routes(file="output/routes.yaml"):
         data = {"routes": current_app.routes}
         save_yaml(file, data)
         return jsonify(success=True, message=gettext("Routes saved"))
-
-
-@save_blueprint.route("/travel-mode", methods=["POST"])
-def save_travel_mode():
-    """
-    Save the chosen travel mode to the problem data in the application context.
-    """
-    if request.method == "POST":
-        current_app.problem_data["travel_mode"] = request.form.get("travelmode")
-        return jsonify(success=True, message=gettext("Travel mode saved"))
