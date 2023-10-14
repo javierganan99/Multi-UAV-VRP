@@ -1,13 +1,19 @@
-from flask import current_app, render_template, request, redirect, jsonify, Flask
+from flask import (
+    current_app,
+    render_template,
+    request,
+    redirect,
+    jsonify,
+    send_from_directory,
+    Flask,
+)
 from app.utils.problem_definiton import AddressFormatConversion
-from app.messaging.sockets import VehiclesSocketIO
 from app.routes.addresses import addresses_blueprint
 from app.routes.loaders import loaders_blueprint
 from app.routes.save import save_blueprint
 from app.routes.routes import routes_blueprint
 from app.routes.simulation import simulation_blueprint
 from flask_babel import Babel, gettext
-from flask_socketio import SocketIO
 
 app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
 app.config.from_object("app.config.Config")
@@ -19,14 +25,6 @@ def get_locale():
 
 
 babel = Babel(app, locale_selector=get_locale)
-
-# SocketIO to manage the streaming
-socketio = SocketIO(app)
-vehicles_namespace = VehiclesSocketIO("/vehiclesns")
-socketio.on_namespace(vehicles_namespace)
-# Save references to the socketio and the vehicles namespace
-app.socketio = socketio
-app.vehicles_namespace = vehicles_namespace
 
 # Blueprint for addresses related routes
 app.register_blueprint(addresses_blueprint, url_prefix="")
@@ -44,12 +42,15 @@ app.register_blueprint(routes_blueprint, url_prefix="")
 app.register_blueprint(simulation_blueprint, url_prefix="")
 
 
+@app.route("/images/<filename>")
+def custom_image(filename):
+    return send_from_directory("app/static/images", filename)
+
+
 @app.route("/reset", methods=["POST"])
 def reset():
     if request.method == "POST":
-        current_app.coordinates_list = [
-            current_app.coordinates_list[0]
-        ]  # Reset coordinates
+        current_app.problem_data["addresses"] = []  # Reset coordinates
         current_app.problem_data = {}  # Reset problem definition
         current_app.solver_data = {}  # Reset solver definiton
         return jsonify(success=True, message=gettext("Reset done"))
@@ -58,7 +59,9 @@ def reset():
 @app.route("/", methods=["POST", "GET"])
 def main():
     # Initialize variables global to the app context
-    current_app.coordinates_list = [[37.38602323347123, -5.99311606343879]]
+    current_app.map_center = [
+        [37.38602323347123, -5.99311606343879]
+    ]  # Center of the map
     current_app.converter = AddressFormatConversion(
         app.config["API_KEY"],
         app.config["GEOCODE_API_URL"],
@@ -79,10 +82,10 @@ def main():
         API_KEY = app.config["API_KEY"]
         return render_template(
             "index.html",
-            coordinates=current_app.coordinates_list,
+            coordinates=current_app.map_center,
             apiKey=API_KEY,
         )
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    app.run(host=app.config["APP_HOST"], port=app.config["APP_PORT"])
