@@ -5,13 +5,13 @@ from app.utils.auxiliary import measure_execution_time
 
 @measure_execution_time
 def find_routes(problem_data, routing_data):
-    # Adap the distance matrix to consider the time [s] instead of the distance
+    # Adapt the distance matrix to consider the time [s] instead of the distance
     for i in range(len(problem_data["distance_matrix"])):
         for j in range(len(problem_data["distance_matrix"][i])):
-            problem_data["distance_matrix"][i][j] /= 0.277778 * problem_data["velocity"]
             problem_data["distance_matrix"][i][j] = int(
                 problem_data["distance_matrix"][i][j]
             )
+
     # Create the routing index manager
     manager = pywrapcp.RoutingIndexManager(
         len(problem_data["distance_matrix"]),
@@ -39,16 +39,19 @@ def find_routes(problem_data, routing_data):
 
     # Add Distance constraint
     dimension_name = "Distance"
-    routing.AddDimension(
+    routing.AddDimensionWithVehicleCapacity(
         transit_callback_index,
         0,  # no slack
-        problem_data["max_flight_time"] * 60,  # vehicle maximum travel time
+        [
+            int(16.6666666667 * v * t)
+            for t, v in zip(problem_data["max_flight_time"], problem_data["velocity"])
+        ],  # vehicle maximum travel time
         True,  # start cumul to zero
         dimension_name,
     )
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
     distance_dimension.SetGlobalSpanCostCoefficient(
-        problem_data["max_flight_time"] * 60
+        max(problem_data["max_flight_time"]) * 60
     )
 
     # Setting first solution heuristic
