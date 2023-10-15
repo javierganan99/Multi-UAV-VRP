@@ -9,12 +9,11 @@ function startSimulation () {
   updatePoseMarkers(n_vehicles)
   eventSourcePose = new EventSource('/simulation')
   eventSourcePose.onmessage = function (event) {
-    const data = JSON.parse(event.data)
-    if (data === null) {
-      // TODO: SOLVE!
-      console.log(data)
+    if (event.data == 'None') {
       stopSimulation()
+      return
     }
+    const data = JSON.parse(event.data)
     for (let i = 0; i < data.length; i++) {
       ml = pose_markers[i].length
       if (ml >= 1) {
