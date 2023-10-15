@@ -79,7 +79,7 @@ The *Travel mode* can be selected in the HMI, supporting the following modes: *F
 
 > Note that although UAVs often fly without restrictions between 2 locations, certain applications such as surveillance or monitoring might require the drones to follow specific paths, like roads, bike paths, or pedestrian paths. For such cases, the travel distance is estimated more precisely using suitable travel modes.
 
-> ⚠️ If you use a *Travel mode* other than the *Flight* mode and your problem includes more than ~50 locations, be cautious Calculating the **Distance Matrix** might take too long for time-critical applications. Additionally, excessive use of the HMI (specially in modes other than *Flight*) may incur costs due to exceeding the free [Distace Matrix Google API](https://developers.google.com/maps/documentation/distance-matrix) requests.
+> ⚠️ If you use a *Travel mode* other than the *Flight* mode and your problem includes more than ~50 locations, be cautious. Calculating the **Distance Matrix** might take too long for time-critical applications. Additionally, excessive use of the HMI (specially in modes other than *Flight*) may incur costs due to exceeding the free [Distace Matrix Google API](https://developers.google.com/maps/documentation/distance-matrix) requests.
 
 ## 🗺️ Routes Computation
 
