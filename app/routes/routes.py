@@ -18,6 +18,9 @@ def generate_route():
     """
     Generate a route based on the provided form data and the problem and solver data stored in the application context.
     This includes generating a distance matrix if it doesn't exist, finding routes using OR-Tools, and generating a solution.
+
+    Returns:
+        JSON object: A JSON object containing the success status, a message, the generated routes, and the problem data.
     """
     if request.method == "POST":
         if not current_app.solver_data:

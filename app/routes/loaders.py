@@ -11,7 +11,12 @@ loaders_blueprint = Blueprint("loaders_blueprint", __name__)
 def load_yaml_problem():
     """
     Load problem definition data from a YAML file, convert the addresses to coordinates, and store them in the application context.
-    """
+
+    Args:
+        None
+
+    Returns:
+        None"""
     coord_inds = []
     if request.method == "POST":
         current_app.problem_data = load_problem_definiton()
@@ -49,7 +54,12 @@ def load_yaml_problem():
 def load_yaml_solver():
     """
     Load solver configuration data from a YAML file and store them in the application context.
-    """
+
+    Args:
+        None
+
+    Returns:
+        None"""
     if request.method == "POST":
         file = request.form["file"]
         current_app.solver_data = load_solver_configuration(file)
