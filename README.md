@@ -21,21 +21,21 @@ This repository provides an Human-Machine Interface (HMI) to solve the Vehicle R
 1. To install Multi-UAV-VRP you can create a conda environment (optional).
 
 ```ssh
-    conda create --name vrp
-    conda activate vrp
+conda create --name vrp
+conda activate vrp
 ```
 
 2. Clone the repository.
 
 ```ssh
-    git clone https://github.com/javierganan99/Multi-UAV-VRP.git
-    cd Multi-UAV-VRP
+git clone https://github.com/javierganan99/Multi-UAV-VRP.git
+cd Multi-UAV-VRP
 ```
 
 3. Install the requirements.
 
 ```ssh
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## 🖥️ Usage
@@ -44,20 +44,20 @@ To use the HMI, you need a [Google Maps API Key](https://developers.google.com/m
 
 1. Set your Google Maps API Key as an enviroment variable.
     
-    Linux and Mac:
-    ```ssh
-    export MAPS_API_KEY=<YOUR_API_KEY>
-    ```
+Linux and Mac:
+```ssh
+export MAPS_API_KEY=<YOUR_API_KEY>
+```
 
-    Windows:
-    ```
-    setx MAPS_API_KEY <YOUR_API_KEY>
-    ```
+Windows:
+```
+setx MAPS_API_KEY <YOUR_API_KEY>
+```
 2. Launch the web app.
 
-    ```
-    python3 /path/to/Multi-UAV-VRP/main.py
-    ```
+```
+python3 /path/to/Multi-UAV-VRP/main.py
+```
 
 ## ✍🏼 Problem Definition
 
