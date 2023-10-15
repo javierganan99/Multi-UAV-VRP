@@ -8,15 +8,9 @@ simulation_blueprint = Blueprint("simulation_blueprint", __name__)
 
 
 @simulation_blueprint.route("/simulation")
-def start_simulation(HOST="localhost", PORT=999):
+def start_simulation():
     """
-    TODO: Provide a more insightful description!
-    Start a simulation of the vehicle routing problem. This includes creating a server socket thread,
-    creating client socket processes, and emitting images from the vehicles to the client side.
-
-    Parameters:
-    HOST (str, optional): Host of the server. Default is "localhost".
-    PORT (int, optional): Port number the server listens to. Default is 999.
+    Start a simulation of the vehicle routing problem.
     """
 
     def stream(simulation, simulation_path):
@@ -26,7 +20,7 @@ def start_simulation(HOST="localhost", PORT=999):
                 string_data = f"data: {json.dumps(coords)}\n\n"
                 yield string_data
             except StopIteration:
-                return "data: None\n\n"
+                yield "data: None\n\n"
 
     current_app.simulation = True
     # Define simulation path
