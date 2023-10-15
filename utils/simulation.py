@@ -6,10 +6,15 @@ def calculate_intermediate_coordinate(c1, c2, velocity, timestamp):
     """
     Calculate intermediate coordinate between two locations using the haversine formula,
     based on the velocity of the vehicle and the timestamp.
-    c1 and c2 are tuples in the format (latitude, longitude).
-    velocity is the velocity of the vehicle in meters per second.
-    timestamp is the time elapsed in seconds since the start of the journey.
-    Returns the intermediate coordinate as a tuple (latitude, longitude).
+
+    Args:
+        c1 (tuple): A tuple representing the coordinates of the first location in the format (latitude, longitude).
+        c2 (tuple): A tuple representing the coordinates of the second location in the format (latitude, longitude).
+        velocity (float): The velocity of the vehicle in meters per second.
+        timestamp (float): The time elapsed in seconds since the start of the journey.
+
+    Returns:
+        dict: A dictionary containing the intermediate coordinate as a tuple (latitude, longitude).
     """
     coords = {}
     lat1, lon1 = c1
@@ -64,7 +69,50 @@ def calculate_intermediate_coordinate(c1, c2, velocity, timestamp):
 
 
 class SimulationPath:
+    """
+    Simulates the UAVs' positions in their corresponding route at the corresponding timestep. When iterated, returns the corresponding
+    position of each UAV in in the current simulated time.
+
+    Args:
+        routes (dict): A dictionary containing the routes for each vehicle, with their corresponding nodes and coordinates.
+        distance_matrix (list of lists): A matrix containing the distances between nodes.
+        timestep (int, optional): The initial timestep for the simulation. Default is 100.
+        decrease_factor (float, optional): The factor by which the timestep decreases in each iteration. Default is 0.01.
+
+    Attributes:
+        initial_timestep (int): The initial timestep for the simulation.
+        timestep (int): The current timestep for the simulation.
+        decrease_factor (float): The factor by which the simulated timestep decreases for the real time to wait.
+        routes (dict): A dictionary containing the routes for each vehicle, with their corresponding nodes and coordinates.
+        number_of_vehicles (int): The number of vehicles in the simulation.
+        distance_matrix (list of lists): A matrix containing the distances between nodes.
+        cummulative_times (list): A list of lists containing the cumulative times for each route.
+        current_node_index (list): A list containing the current node index for each vehicle.
+        finish_route (list): A list containing the stop flag for each vehicle's route.
+        current_path (list): A list containing the current path coordinates for each vehicle.
+        current_coords (list): A list containing the current coordinates of each vehicle.
+        time (int): The current simulation time.
+
+    Methods:
+        __init__(routes, distance_matrix, timestep=100, decrease_factor=0.01): Initializes an instance of the class.
+        __iter__(): Returns an iterator object that iterates over the object.
+        __next__(): Performs a sleep operation for a specified duration, updates the current time, and calculates the current
+                    coordinates based on the given routes and time.
+    """
+
     def __init__(self, routes, distance_matrix, timestep=100, decrease_factor=0.01):
+        """
+        It sets the initial timestep, timestep decrease factor, routes, number of vehicles, distance matrix,
+        cummulative times, current node index, finish route flags, current path, current coordinates, and simulation time.
+
+        Args:
+            routes (dict): A dictionary containing the routes for each vehicle, with their corresponding nodes and coordinates.
+            distance_matrix (list of lists): A matrix containing the distances between nodes.
+            timestep (int, optional): The initial timestep for the simulation. Default is 100.
+            decrease_factor (float, optional): The factor by which the timestep decreases in each iteration. Default is 0.01.
+
+        Returns:
+            None"""
         self.initial_timestep = timestep
         self.timestep = timestep
         self.decrease_factor = decrease_factor
@@ -106,6 +154,17 @@ class SimulationPath:
         return self
 
     def __next__(self):
+        """
+        This function performs a sleep operation for a specified duration, updates the current time,
+        and calculates the current coordinates based on the given routes and time. It iterates through each route,
+        updating the current node index and path if necessary, and calculates the intermediate coordinate based on
+        the current time and velocity.
+
+        Args:
+            None
+
+        Returns:
+            dict: The current coordinates of each route."""
         time.sleep(self.decrease_factor * self.timestep)
         if all(self.finish_route):
             raise StopIteration

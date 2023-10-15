@@ -8,7 +8,13 @@ import math
 def calculate_haversine_distance(c1, c2):
     """
     Calculate distance between 2 coordinates using haversine formula.
-    """
+
+    Args:
+        c1 (tuple): A tuple containing the latitude and longitude of the first coordinate.
+        c2 (tuple): A tuple containing the latitude and longitude of the second coordinate.
+
+    Returns:
+        float: The distance between the two coordinates in meters."""
     lat1, lon1 = c1
     lat2, lon2 = c2
     lat1_rad = math.radians(lat1)
@@ -31,6 +37,12 @@ def calculate_haversine_distance(c1, c2):
 def generate_flight_distance_matrix(coordinates):
     """
     Create distance matrix using haversine formula
+
+    Args:
+        coordinates (list): List of coordinate tuples (latitude, longitude).
+
+    Returns:
+        list: Distance matrix where each element represents the distance between two coordinates.
     """
     num_coordinates = len(coordinates)
     distance_matrix = [[0] * num_coordinates for _ in range(num_coordinates)]
@@ -54,7 +66,17 @@ def generate_distance_matrix(
 ):
     """
     Generate a distance matrix of the specified addresses.
-    """
+
+    Args:
+        addresses (list): List of addresses to generate the distance matrix.
+        API_KEY (str): API key for accessing the Distance Matrix API.
+        GEOCODE_API_URL (str): URL for the Geocode API.
+        DISTANCE_MATRIX_API_URL (str): URL for the Distance Matrix API.
+        mode (str, optional): Mode of transport for the distance request (default is "walking").
+        max_elements (int, optional): Maximum number of elements in each request (default is 10).
+
+    Returns:
+        list: The distance matrix as a list of lists."""
     available_modes = ["driving", "walking", "bicycling", "transit", "flight"]
     assert mode in available_modes, "Distance request mode not available!"
 
@@ -111,6 +133,17 @@ def generate_distance_matrix(
 
 
 def detect_address_format(address: str):
+    """
+    Detects the format of an address based on its structure.
+
+    This function takes an address as input and determines its format based on the structure of the address. It can detect addresses in three different formats: float-coordinates, str-coordinates, and name.
+
+    Args:
+        address (str): The address to be analyzed.
+
+    Returns:
+        str: The format of the address. It can be "float-coordinates", "str-coordinates" or "name".
+    """
     if (
         isinstance(address, list)
         and isinstance(address[0], (float, int))
@@ -129,7 +162,35 @@ def detect_address_format(address: str):
 
 
 class AddressFormatConversion:
+    """
+    Converts the given address from the input format to the corresponding coordinates.
+
+    Args:
+        API_KEY (str): The API key required to access the geocoding and distance matrix services.
+        GEOCODE_API_URL (str): The URL of the geocoding API.
+        DISTANCE_MATRIX_API_URL (str): The URL of the distance matrix API.
+
+    Attributes:
+        API_KEY (str): The API key required to access the geocoding and distance matrix services.
+        GEOCODE_API_URL (str): The URL of the geocoding API.
+        DISTANCE_MATRIX_API_URL (str): The URL of the distance matrix API.
+
+    Methods:
+        __init__(API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL): Initializes the AddressFormatConversion object with the provided API key and API URLs.
+        address2coords(address): Given an address in str format, return its coordinates.
+    """
+
     def __init__(self, API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL):
+        """
+        Initializes the API key and API URLs for the class.
+
+        Args:
+            API_KEY (str): The API key for accessing the APIs.
+            GEOCODE_API_URL (str): The URL for the geocode API.
+            DISTANCE_MATRIX_API_URL (str): The URL for the distance matrix API.
+
+        Returns:
+            None"""
         self.API_KEY, self.GEOCODE_API_URL, self.DISTANCE_MATRIX_API_URL = (
             API_KEY,
             GEOCODE_API_URL,
@@ -139,7 +200,12 @@ class AddressFormatConversion:
     def address2coords(self, address):
         """
         Given an address in str format, return its coordinates
-        """
+
+        Args:
+            address (str): The address to geocode.
+
+        Returns:
+            list: The coordinates of the address in the format [latitude, longitude]."""
         address = unidecode(address)
         jsonResult = urllib.request.urlopen(
             self.GEOCODE_API_URL
@@ -160,13 +226,49 @@ class AddressFormatConversion:
 
 class DistanceMatrixRequest:
     """
-    Build and send request for the given origin and destination addresses.
-    First convert the addresses/coordinates into place ids and then perform the distance request
+    This class represents a request to the Distance Matrix API and provides functionality for building the request URL,
+    handling addresses and coordinates, and checking the status of the response.
+
+    Args:
+        API_KEY (str): The API key for the distance calculator service.
+        GEOCODE_API_URL (str): The URL for the geocode API.
+        DISTANCE_MATRIX_API_URL (str): The URL for the distance matrix API.
+        mode (str, optional): The transportation mode for distance requests. Must be one of "driving", "walking", "bicycling", or "transit". Defaults to "DRIVING".
+
+    Attributes:
+        API_KEY (str): The API key for the distance calculator service.
+        GEOCODE_API_URL (str): The URL for the geocode API.
+        DISTANCE_MATRIX_API_URL (str): The URL for the distance matrix API.
+        mode (str): The transportation mode for distance requests.
+        available_modes (list): The list of available transportation modes.
+
+    Methods:
+        __init__(API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL, mode): Constructor for the DistanceMatrixRequest class.
+        __call__(origin_dirs, dest_dirs): Performs the distance matrix request.
+
+    Private Methods:
+        __build_address_str(address): Builds a string representation of the Google Maps geocoding API request URL for a given address.
+        __build_coords_str(coords): Builds a string representation of coordinates.
+        __add_to_str(data, global_str): Adds data to a global string.
+        __adapt_addresses(addresses): Adapts addresses by replacing any accented characters with their unaccented counterparts.
+        __check_status(response, origin, dest): Checks the status of a geocoding response and prints any errors encountered.
     """
 
     def __init__(
         self, API_KEY, GEOCODE_API_URL, DISTANCE_MATRIX_API_URL, mode="DRIVING"
     ):
+        """
+        This function initializes a DistanceCalculator object with the provided API key, geocode API URL, distance matrix API URL,
+        and mode of transportation (default is "DRIVING").
+
+        Args:
+            API_KEY (str): The API key for the distance calculator service.
+            GEOCODE_API_URL (str): The URL for the geocode API.
+            DISTANCE_MATRIX_API_URL (str): The URL for the distance matrix API.
+            mode (str, optional): The transportation mode for distance requests. Must be one of "driving", "walking", "bicycling", or "transit". Defaults to "DRIVING".
+
+        Returns:
+            None"""
         self.API_KEY, self.GEOCODE_API_URL, self.DISTANCE_MATRIX_API_URL = (
             API_KEY,
             GEOCODE_API_URL,
@@ -177,6 +279,16 @@ class DistanceMatrixRequest:
         assert mode in self.available_modes, "Distance request mode not available!"
 
     def __build_address_str(self, address):
+        """
+        Builds a string representation of the Google Maps geocoding API request URL for a given address.
+
+        Args:
+            self (object): The instance of the class that the method is called on.
+            address (str): The address to geocode.
+
+        Returns:
+            str: A string containing the place_id of the first result from the geocoding API response, or None if no results were found.
+        """
         jsonResult = urllib.request.urlopen(
             self.GEOCODE_API_URL
             + "address="
@@ -191,9 +303,34 @@ class DistanceMatrixRequest:
         return "place_id:" + response["results"][0]["place_id"]
 
     def __build_coords_str(self, coords):
+        """
+        Builds a string representation of coordinates.
+
+        This function takes a list of coordinates and builds a string representation of them by joining each coordinate with a comma.
+
+        Args:
+            coords (list): The list of coordinates to be converted into a string representation.
+
+        Returns:
+            str: The string representation of the coordinates."""
         return ",".join([str(coord) for coord in coords])
 
     def __add_to_str(self, data, global_str):
+        """
+        Adds data to a global string.
+
+        This function checks the type of the data and adds it to the global string accordingly.
+        If the data is a list of floats or integers, the coordinates string is built and added to the global string.
+        If the data is a string, the address string is built and added to the global string.
+        If the data is neither a list of floats or integers nor a string, an error message is printed and None is returned.
+
+        Args:
+            data (list or str): The data to be added to the global string.
+            global_str (str): The global string to which the data will be added.
+
+        Returns:
+            str or None: The updated global string if data was added successfully, or None if an error occurred.
+        """
         if (
             isinstance(data, list)
             and isinstance(data[0], (float, int))
@@ -211,11 +348,32 @@ class DistanceMatrixRequest:
         return global_str
 
     def __adapt_addresses(self, addresses):
+        """
+        This function adapts addresses by replacing any accented characters with their unaccented counterparts.
+
+        Args:
+            addresses (list): A list of addresses to adapt.
+
+        Returns:
+            None"""
         for i in range(len(addresses)):
             if isinstance(addresses[i], str):
                 addresses[i] = unidecode(addresses[i])
 
     def __check_status(self, response, origin, dest):
+        """
+        Checks the status of a geocoding response and prints any errors encountered.
+
+        This function takes a geocoding response, origin addresses, and destination addresses. It checks the status of each element in the response and prints an error message for any element with a status other than "OK". The function returns a boolean indicating whether all elements in the response have a status of "OK".
+
+        Args:
+            response (dict): The geocoding response containing "rows" and "elements" data.
+            origin (list): The list of origin addresses.
+            dest (list): The list of destination addresses.
+
+        Returns:
+            bool: True if all elements in the response have a status of "OK", False otherwise.
+        """
         possible_status = {
             "OK": "Valid result",
             "NOT_FOUND": "The origin and/or destination can not be geocoded.",
@@ -236,6 +394,16 @@ class DistanceMatrixRequest:
         return global_check
 
     def __call__(self, origin_dirs, dest_dirs):
+        """
+        Calls the Google Distance Matrix API to retrieve the distance and duration between origin and destination addresses.
+
+        Args:
+            origin_dirs (list): A list of origin addresses.
+            dest_dirs (list): A list of destination addresses.
+
+        Returns:
+            dict: A dictionary containing the response from the API, including distance and duration information.
+        """
         self.org_str = ""
         self.dst_str = ""
         self.__adapt_addresses(origin_dirs)

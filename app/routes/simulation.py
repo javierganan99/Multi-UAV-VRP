@@ -11,7 +11,9 @@ simulation_blueprint = Blueprint("simulation_blueprint", __name__)
 def start_simulation():
     """
     Start a simulation of the vehicle routing problem.
-    """
+
+    Returns:
+        Response: A response object containing the simulated data."""
 
     def stream(simulation, simulation_path):
         while simulation:
@@ -39,8 +41,7 @@ def start_simulation():
 @simulation_blueprint.route("/stop-simulation", methods=["POST"])
 def stop_simulation():
     """
-    Activate the flag to end the ongoing simulation of the vehicles.
-    """
+    Activate the flag to end the ongoing simulation of the vehicles."""
     if request.method == "POST":
         current_app.simulation = False
         return jsonify(success=True, message=gettext("Ending simulation..."))
