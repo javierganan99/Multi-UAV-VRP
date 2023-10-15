@@ -14,7 +14,7 @@ This repository provides an Human-Machine Interface (HMI) to solve the Vehicle R
 
 - [x] [**OR-Tools**](https://developers.google.com/optimization): Currently leveraging the [OR-Tools open-source library for combinatorial optimization](https://github.com/google/or-tools) to compute the routes. Other methods can be seamlessly integrated (see [Routes Computation](#🗺️-routes-computation) section).
 
-- [ ] **Replanning**: Routes recomputation when the original problem definition changes (vehicle lost, new vehicle addition, etc). 
+- [ ] [**Replanning**: Routes recomputation when the original problem definition changes (vehicle lost, new vehicle addition, etc).](https://github.com/javierganan99/Multi-UAV-VRP/issues/8)
 
 ## ⚙️ Installation
 
