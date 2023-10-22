@@ -1,6 +1,6 @@
-from utils.auxiliary import load_yaml
-from pathlib import Path
 import os
+from pathlib import Path
+from utils.auxiliary import load_yaml
 
 
 def load_problem_definiton(
@@ -13,7 +13,8 @@ def load_problem_definiton(
     Loads the definition for the problem
 
     Args:
-        file (str): The path to the YAML file containing the problem definition (default is the default YAML file path).
+        file (str): The path to the YAML file containing the
+        problem definition (default is the default YAML file path).
 
     Returns:
         dict: The loaded problem definition as a dictionary."""
@@ -30,7 +31,8 @@ def load_solver_configuration(
     Loads the configuration for the solver
 
     Args:
-        file (str, optional): The file path of the configuration (default is the path to the solver_configuration.yaml file)
+        file (str, optional): The file path of the configuration
+        (default is the path to the solver_configuration.yaml file)
 
     Returns:
         dict: The loaded configuration as a dictionary"""
