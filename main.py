@@ -7,13 +7,13 @@ from flask import (
     send_from_directory,
     Flask,
 )
+from flask_babel import Babel, gettext
 from utils.problem_definiton import AddressFormatConversion
 from app.routes.addresses import addresses_blueprint
 from app.routes.loaders import loaders_blueprint
 from app.routes.save import save_blueprint
 from app.routes.routes import routes_blueprint
 from app.routes.simulation import simulation_blueprint
-from flask_babel import Babel, gettext
 
 app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
 app.config.from_object("app.config.Config")
@@ -24,7 +24,10 @@ def get_locale():
     """
     Get the locale that best matches the user's preferred language.
 
-    This function uses the `accept_languages` attribute from the `request` object to determine the best matching locale based on the user's preferred language. It compares the user's preferred language against the available languages defined in the `LANGUAGES` configuration dictionary.
+    This function uses the `accept_languages` attribute from the `request`
+    object to determine the best matching locale based on the user's preferred language.
+    It compares the user's preferred language against the available languages defined
+    in the `LANGUAGES` configuration dictionary.
 
     Returns:
         str: The locale that best matches the user's preferred language."""
@@ -70,7 +73,8 @@ def reset():
     """
     Resets the problem definition, solver definiton, and routes.
 
-    This function resets the problem definition, solver definition, and routes by clearing the respective data structures.
+    This function resets the problem definition, solver definition,
+    and routes by clearing the respective data structures.
     It sets the 'addresses', 'start_nodes', 'end_nodes' to empty lists, and 'n_vehicles' to 1.
     It also sets the 'simulation' flag to False.
 
@@ -86,6 +90,11 @@ def reset():
     current_app.simulation = False
     return jsonify(success=True, message=gettext("Reset done"))
 
+@app.route('/maps-api-key', methods=["GET"])
+def get_maps_api_key():
+    print(app.config["API_KEY"])
+    return jsonify({"apiKey": app.config["API_KEY"]})
+
 
 @app.route("/", methods=["POST", "GET"])
 def main():
@@ -94,7 +103,8 @@ def main():
 
     This function initializes variables global to the app context, sets the map center coordinates,
     sets up an AddressFormatConversion object, and calls the reset function to initialize variables.
-    When a POST request is made, the function redirects to the root URL. If an error occurs, it returns an error message.
+    When a POST request is made, the function redirects to the root URL.
+    If an error occurs, it returns an error message.
     Otherwise, it renders the index.html template with the map center coordinates and the API key.
 
     Args:
@@ -113,17 +123,8 @@ def main():
     reset()  # Initialize variables
 
     if request.method == "POST":
-        try:
-            return redirect("/")
-        except:
-            return gettext("Error introducing the address")
-    else:
-        API_KEY = app.config["API_KEY"]
-        return render_template(
-            "index.html",
-            coordinates=current_app.map_center,
-            apiKey=API_KEY,
-        )
+        return redirect("/")
+    return render_template("index.html",coordinates=current_app.map_center)
 
 
 if __name__ == "__main__":
