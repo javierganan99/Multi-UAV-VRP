@@ -1,14 +1,18 @@
-function stringNumbersToList (str, numbers_to_load) {
+import { globalElements } from './globals.js'
+export { stringNumbersToList, reset }
+function stringNumbersToList (str, numbers2load) {
   const parts = str.split(/[,\s]+/).filter(part => part !== '')
-  if (parts.length === 1 && numbers_to_load == 1) {
+  console.log(numbers2load)
+  if (parts.length === 1 && numbers2load === 1) {
     const singleNumber = parseFloat(parts[0])
     return isNaN(singleNumber)
       ? 'Invalid input: Not a valid number'
-      : singleNumber
+      : [singleNumber]
   } else if (parts.length > 1) {
     const numbers = parts.map(part => parseFloat(part))
+    console.log('NUMBERS ' + numbers)
     const allNumbers = numbers.every(num => !isNaN(num))
-    if (allNumbers && numbers.length == numbers_to_load) {
+    if (allNumbers && numbers.length === numbers2load) {
       return numbers
     } else {
       return false
@@ -21,26 +25,26 @@ function stringNumbersToList (str, numbers_to_load) {
 // Function to reset the problem information
 function reset (event) {
   event.preventDefault()
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest()
   xhr.open('POST', '/reset', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         // Reset parameters
-        for (let i = 0; i < check_list.length; i++) {
-          document.getElementById(check_list[i]).value = 0
+        for (let i = 0; i < globalElements.checkList.length; i++) {
+          document.getElementById(globalElements.checkList[i]).value = 0
         }
         // Delete markers
-        for (let i = 0; i < markers.length; i++) {
-          markers[i].setMap(null)
+        for (let i = 0; i < globalElements.markers.length; i++) {
+          globalElements.markers[i].setMap(null)
         }
-        markers = [markers[0]]
+        globalElements.markers = [globalElements.markers[0]]
         // Delete routes
-        for (let i = 0; i < paths.length; i++) {
-          paths[i].setMap(null)
+        for (let i = 0; i < globalElements.paths.length; i++) {
+          globalElements.paths[i].setMap(null)
         }
-        paths = []
+        globalElements.paths = []
         console.log('Reset done.')
       } else {
         console.error('Failed to reset:', xhr.status)

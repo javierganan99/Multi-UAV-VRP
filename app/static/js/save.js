@@ -1,7 +1,8 @@
+export { saveNodes, saveRoutes }
 // Function to save the nodes
 function saveNodes (event) {
   event.preventDefault()
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest()
   xhr.open('POST', '/save-nodes', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
@@ -19,7 +20,7 @@ function saveNodes (event) {
 // Function to save the routes
 function saveRoutes (event) {
   event.preventDefault()
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest()
   xhr.open('POST', '/save-routes', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {

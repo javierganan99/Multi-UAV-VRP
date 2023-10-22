@@ -1,0 +1,23 @@
+{
+    "parserOptions": { 
+      "ecmaVersion": 2018 
+    },
+    "env": { 
+      "node": true,
+      "browser": true
+    }, 
+    "parser": "espree", 
+    "rules": { 
+      "no-console": "warn", 
+      "no-use-before-define": "warn", 
+      "spaced-comment": "warn",
+      "prefer-const": "off"
+    }, 
+    "extends": [ 
+      "standard" 
+    ],
+    "plugins": ["html"],
+    "globals": {
+      "google": "readonly"
+    }
+  } 

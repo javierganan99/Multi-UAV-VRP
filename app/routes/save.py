@@ -12,7 +12,8 @@ def save_nodes(file="output/nodes2visit.yaml"):
     Save the list of addresses (nodes) to visit to a YAML file.
 
     Parameters:
-        file (str, optional): The path of the file to save to. Default is "output/nodes2visit.yaml".
+        file (str, optional): The path of the file to save to.
+            Default is "output/nodes2visit.yaml".
 
     Returns:
         type: Description of the return param."""

@@ -8,14 +8,19 @@ def find_routes(problem_data, routing_data):
     """
     Find routes using a given problem data and routing data.
 
-    This function takes in problem data and routing data and uses them to find routes using the Google OR-Tools library.
+    This function takes in problem data and routing data and
+    uses them to find routes using the Google OR-Tools library.
 
     Args:
-        problem_data (dict): A dictionary containing the problem data, including the distance matrix, number of vehicles, start nodes, end nodes, max flight time, and velocity.
-        routing_data (dict): A dictionary containing the routing data, including the first solution strategy, local search strategy, solution limit, time limit, log search flag, and LNS time limit.
+        problem_data (dict): A dictionary containing the problem data, including the distance
+            matrix, number of vehicles, start nodes, end nodes, max flight time, and velocity.
+        routing_data (dict): A dictionary containing the routing data, including the first
+            solution strategy, local search strategy, solution limit, time limit,
+            log search flag, and LNS time limit.
 
     Returns:
-        tuple: A tuple containing the problem data, routing index manager, routing model, and the solution to the routing problem.
+        tuple: A tuple containing the problem data, routing index manager,
+            routing model, and the solution to the routing problem.
     """
     for i in range(len(problem_data["distance_matrix"])):
         for j in range(len(problem_data["distance_matrix"][i])):
