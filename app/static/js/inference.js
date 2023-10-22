@@ -1,7 +1,11 @@
+import { globalElements } from './globals.js'
+import { stringNumbersToList } from './auxiliary.js'
+import { deleteAllMarkers, drawProblemData, drawRoutes } from './drawing.js'
+export { generateRoutes }
 // Function to check if the depots are in the markers
-function check_depots_in_markers (depots) {
-  for (var depot of depots) {
-    if (depot > markers.length - 1 || depot < 0) {
+function checkDepotsInMarkers (depots) {
+  for (const depot of depots) {
+    if (depot > globalElements.markers.length - 1 || depot < 0) {
       return false
     }
   }
@@ -10,49 +14,51 @@ function check_depots_in_markers (depots) {
 
 // Function to check the values of the problem
 // TODO: CHECK MIN VALUE
-function no_warning (name, warning, min_value = 0) {
-  if (name == 'n_vehicles') {
-    var numbers_to_load = 1
+function noWarning (name, warning, minValue = 0) {
+  let numbers2load
+  if (name === 'n_vehicles') {
+    numbers2load = 1
   } else {
-    numbers_to_load = n_vehicles
+    numbers2load = globalElements.nVehicles[0]
   }
-  var element = document.getElementById(name)
-  var elementWarning = document.getElementById(warning)
-  var new_element = stringNumbersToList(element.value, numbers_to_load)
+  const element = document.getElementById(name)
+  const elementWarning = document.getElementById(warning)
+  const newElement = stringNumbersToList(element.value, numbers2load)
+  console.log('new element ' + newElement)
   if (
-    !new_element ||
-    (check_list.slice(3).includes(name) &&
-      !check_depots_in_markers(new_element))
+    newElement === false ||
+    (globalElements.checkList.slice(3).includes(name) &&
+      !checkDepotsInMarkers(newElement))
   ) {
     elementWarning.classList.remove('hidden')
     return false
   } else {
     elementWarning.classList.add('hidden')
-    if (name == 'n_vehicles') {
-      n_vehicles = new_element
+    if (name === 'n_vehicles') {
+      globalElements.nVehicles = newElement
     }
-    return new_element
+    return newElement
   }
 }
 
 // Function to generate the routes
 function generateRoutes (event) {
   event.preventDefault()
-  var xhr = new XMLHttpRequest()
+  const xhr = new XMLHttpRequest()
   xhr.open('POST', '/create-routes', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   // Check for any invalid value
-  var returned_param
-  for (let i = 0; i < check_list.length; i++) {
-    returned_param = no_warning(check_list[i], check_list[i] + '-warning')
-    if (!returned_param) {
+  let returnedParam
+  for (let i = 0; i < globalElements.checkList.length; i++) {
+    returnedParam = noWarning(globalElements.checkList[i], globalElements.checkList[i] + '-warning')
+    if (!returnedParam) {
       return false
     }
   }
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText)
+        const response = JSON.parse(xhr.responseText)
         if (response.success) {
           // Delete the current problem data
           deleteAllMarkers()
@@ -70,12 +76,12 @@ function generateRoutes (event) {
   }
 
   // Send the parameters
-  url = ''
-  for (let i = 0; i < check_list.length - 1; i++) {
+  let url = ''
+  for (let i = 0; i < globalElements.checkList.length - 1; i++) {
     url +=
-      check_list[i] +
+      globalElements.checkList[i] +
       '=' +
-      encodeURIComponent(document.getElementById(check_list[i]).value) +
+      encodeURIComponent(document.getElementById(globalElements.checkList[i]).value) +
       '&'
   }
   url +=
@@ -84,10 +90,10 @@ function generateRoutes (event) {
     encodeURIComponent(document.getElementById('travel_mode').value) +
     '&'
   url +=
-    check_list[check_list.length - 1] +
+    globalElements.checkList[globalElements.checkList.length - 1] +
     '=' +
     encodeURIComponent(
-      document.getElementById(check_list[check_list.length - 1]).value
+      document.getElementById(globalElements.checkList[globalElements.checkList.length - 1]).value
     )
   xhr.send(url)
 }
