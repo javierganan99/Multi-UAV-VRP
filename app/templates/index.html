@@ -30,14 +30,6 @@
             </form>
         </div>
 
-        <!-- <div class="boxh"> -->
-            <!-- <h2>{{ gettext("Depot Coordinates") }}</h2>
-            <form onsubmit="handleAddress(event, depot = true);">
-                <input type="text" name="depot" id="depot">
-                <input type="submit" class="small-blue-button" value={% trans %}Set{% endtrans %}>
-            </form> -->
-        <!-- </div> -->
-
         <div id="map"></div>
     </div>
 
@@ -54,11 +46,6 @@
                 <input type="text" id="max_flight_time" name="max_flight_time">
                 <span id="max_flight_time-warning" class="warning hidden">{% trans %}Please enter valid maximun times{%
                     endtrans %}</span>
-
-                <!-- <label for="capacity">{% trans %}Max Capacity per Vehicle{% endtrans %}</label>
-                <input type="number" id="capacity" name="capacity">
-                <span id="capacity-warning" class="warning hidden">{% trans %}Please enter a valid maximun capacity{%
-                    endtrans %}</span> -->
 
                 <label for="velocity">{% trans %}Vehicle Velocity [km/h]{% endtrans %}</label>
                 <input type="text" id="velocity" name="velocity">
@@ -78,15 +65,12 @@
                     
                 <button id="generate-routes" class="blue-button">{% trans %}Generate Routes{% endtrans %}</button>
             </form>
+            <button id="load-problem" class="blue-button" onclick="loadProblemDefiniton(event)">{% trans %}Load Problem Definition from File{%
+                endtrans %}</button>
+            <br>
+            <button id="reset" class="blue-button" onclick="reset(event)">{% trans %}Reset{% endtrans %}</button>
+            <br>
         </div>
-        <button class="blue-button" onclick="loadProblemDefiniton(event)">{% trans %}Load Problem Definition from File{%
-            endtrans %}</button>
-        <br>
-        <button class="blue-button" onclick="loadSolverConfiguration(event)">{% trans %}Load Solver Configuration{%
-            endtrans %}</button>
-        <br>
-        <button class="blue-button" onclick="reset(event)">{% trans %}Reset{% endtrans %}</button>
-        <br>
     </div>
     <div class="column">
         <button class="blue-button" onclick="saveRoutes(event)">{% trans %}Save Routes{% endtrans %}</button>
@@ -106,18 +90,7 @@
 </div>
 
 <div id="map-center" coordinates="{{ coordinates|tojson }}"></div>
-<script src="{{ url_for('static',filename='js/variables.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/drawing.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/addresses.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/auxiliary.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/inference.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/simulation.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/monitor.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/load.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/map_creation.js', _external=True) }}"></script>
-<script src="{{ url_for('static',filename='js/save.js', _external=True) }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=getMap" async defer>
-</script>
+<script src="{{ url_for('static',filename='js/index.js') }}" type="module"></script>
 
 
 
