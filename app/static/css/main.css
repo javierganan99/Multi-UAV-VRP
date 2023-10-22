@@ -80,10 +80,6 @@ h2 {
   margin-left: 0px;
 }
 
-#generate-routes {
-  margin: 10px 0px;
-}
-
 /* Buttons */
 .blue-button {
   background-color: #42aed9;
@@ -91,7 +87,6 @@ h2 {
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
-  /* font-family: 'Verdana', sans-serif; */
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -100,6 +95,13 @@ h2 {
   max-width: 100%;
 
 }
+
+#generate-routes, #load-problem, #reset {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+} 
+
 
 
 .small-blue-button {
@@ -134,12 +136,6 @@ h2 {
 #map {
   height: 100%;
   width: 100%;
-}
-
-/* Problem Definition section */
-input[type="number"] {
-  width: 200px;
-  margin-bottom: 10px;
 }
 
 label {
@@ -204,10 +200,10 @@ label {
 }
 
 
-/* Style for text input boxes */
+/* Style for text and number input boxes */
 input[type="text"],
 input[type="number"]{
-  width: 98%;
+  width: 95%;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
@@ -225,6 +221,6 @@ label {
 input[type="text"]:focus,
 input[type="number"]:focus,
 textarea:focus {
-  border-color: #007bff; /* Change to your preferred focus color */
-  outline: none; /* Remove default focus outline */
+  border-color: #007bff;
+  outline: none;
 }
