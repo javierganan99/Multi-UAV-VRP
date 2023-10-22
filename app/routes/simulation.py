@@ -1,7 +1,7 @@
+import json
 from flask import Blueprint, current_app, request, jsonify, Response
 from flask_babel import gettext
 from utils.simulation import SimulationPath
-import json
 
 # Define a Flask blueprint for handling simulation-related routes
 simulation_blueprint = Blueprint("simulation_blueprint", __name__)
