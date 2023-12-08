@@ -1,3 +1,11 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module contains loading functions to load .YAML parameters' files.
+"""
+
 import os
 from pathlib import Path
 from utils.auxiliary import load_yaml

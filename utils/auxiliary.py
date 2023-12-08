@@ -1,3 +1,11 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module contains some auxiliary functions.
+"""
+
 import os
 import time
 import base64
