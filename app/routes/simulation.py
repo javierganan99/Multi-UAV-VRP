@@ -1,3 +1,22 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module defines routes and functions for handling simulation-related operations.
+
+It includes the following functionality:
+
+1. Flask Blueprint for managing simulation-related routes.
+2. Functions for starting and stopping a simulation of the vehicle routing problem.
+
+Routes:
+    - '/simulation' (GET):
+        Starts a simulation of the vehicle routing problem and streams simulated data.
+    - '/stop-simulation' (DELETE):
+        Activates the flag to end the ongoing simulation of the vehicles.
+"""
+
 import json
 from flask import Blueprint, current_app, request, jsonify, Response
 from flask_babel import gettext
@@ -38,10 +57,10 @@ def start_simulation():
     )
 
 
-@simulation_blueprint.route("/stop-simulation", methods=["POST"])
+@simulation_blueprint.route("/stop-simulation", methods=["DELETE"])
 def stop_simulation():
     """
     Activate the flag to end the ongoing simulation of the vehicles."""
-    if request.method == "POST":
+    if request.method == "DELETE":
         current_app.simulation = False
         return jsonify(success=True, message=gettext("Ending simulation..."))

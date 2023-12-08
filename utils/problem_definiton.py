@@ -1,3 +1,29 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module contains functions and classes for the definition of the VRP problem.
+It works with geographical coordinates, calculates distances, and generating 
+distance matrices using Google Maps APIs.
+
+Functions:
+- calculate_haversine_distance(c1, c2): 
+    Calculate distance between two coordinates using the haversine formula.
+- generate_flight_distance_matrix(coordinates): 
+    Create a distance matrix using the haversine formula for flight distances.
+- generate_distance_matrix(addresses, api_key, geocode_api_url,
+    distance_matrix_api_url, mode="walking", max_elements=10): 
+        Generate a distance matrix of specified addresses using the Distance Matrix API.
+- detect_address_format(address): Detect the format of an address based on its structure.
+
+Classes:
+- AddressFormatConversion: Converts addresses from one format to coordinates and vice versa.
+- DistanceMatrixRequest: 
+    Represents a request to the Distance Matrix API for distance and duration between addresses.
+
+Note: API keys and API URLs are required for accessing geocoding and distance matrix services.
+"""
 import json
 import math
 import urllib.request

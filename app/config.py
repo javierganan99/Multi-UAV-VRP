@@ -1,3 +1,11 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This is the configuration file for the web app.
+"""
+
 import os
 
 

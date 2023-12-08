@@ -1,3 +1,23 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module defines routes and functions for handling route-related operations.
+
+It includes the following functionality:
+
+1. Flask Blueprint for managing routes-related routes.
+2. Function for generating a route based on provided form data 
+    and the problem and solver data stored in the application context.
+
+Routes:
+    - '/create-routes' (POST): Generates a route based on the provided form data
+        and the problem and solver data stored in the application context.
+        This includes generating a distance matrix if it doesn't exist,
+        finding routes using OR-Tools, and generating a solution.
+"""
+
 from flask import Blueprint, current_app, request, jsonify
 from flask_babel import gettext
 from utils.load_parameters import load_solver_configuration, load_problem_definiton

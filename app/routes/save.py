@@ -1,3 +1,20 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module defines routes and functions for handling saving-related operations.
+
+It includes the following functionality:
+
+1. Flask Blueprint for managing saving-related routes.
+2. Functions for saving nodes and generated routes to YAML files.
+
+Routes:
+    - '/save-nodes' (POST): Saves the list of addresses (nodes) to visit to a YAML file.
+    - '/save-routes' (POST): Saves the generated routes to a YAML file.
+"""
+
 from flask import Blueprint, current_app, request, jsonify
 from flask_babel import gettext
 from utils.auxiliary import save_yaml, ensure_folder_exist

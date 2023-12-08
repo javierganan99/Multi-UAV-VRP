@@ -2,6 +2,8 @@
 
 This repository provides an Human-Machine Interface (HMI) to solve the Vehicle Routing Problem (VRP) for a heterogeneous swarm of Unmanned Aerial Vehicles (UAVs). It optimizes the time in which **N** UAVs visit **M** locations, considering the diverse capabilities of each vehicle and adhering to each drone's restrictions.
 
+<img src="app/static/images/example.gif" alt="Example of the web app">
+
 ## 📋 Features
 
 - [x] **Multi-depot**: Define several departure and arrival depots. Each UAV can take off and land at different locations.

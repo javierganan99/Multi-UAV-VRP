@@ -1,3 +1,21 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module defines routes and functions to handle loading-related operations.
+
+It includes the following functionality:
+
+1. Flask Blueprint for managing loading-related routes.
+2. Function for loading problem definition data from a YAML file,
+    converting addresses to coordinates, and storing them in the application context.
+
+Routes:
+    - '/load-problem' (GET): Loads problem definition data from a YAML file,
+        converts addresses to coordinates, and stores them in the application context.
+"""
+
 from flask import Blueprint, current_app, request, jsonify
 from flask_babel import gettext
 from utils.problem_definiton import detect_address_format

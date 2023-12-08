@@ -1,3 +1,14 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module contains a function for finding routes using the Google OR-Tools library.
+
+The 'find_routes' function takes in problem data and routing data and utilizes the OR-Tools library
+to compute optimal routes for vehicles based on the provided problem data and routing constraints.
+"""
+
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from utils.auxiliary import measure_execution_time

@@ -80,7 +80,7 @@ function addMarker (coordinates, index, color = 'red') {
 // Deletes a marker from the globalElements.mapGoogle
 function deleteMarker (index) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/delete-address', true)
+  xhr.open('DELETE', '/delete-address', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {

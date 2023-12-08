@@ -1,3 +1,11 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This module contains the required code to perform a simulation of the routes.
+"""
+
 import math
 import time
 

@@ -1,3 +1,12 @@
+"""
+AGPL-3.0 License
+
+Author: Francisco Javier Gañán
+
+This is the entry point of the web app. 
+All the modules are imported to and accessed from this file.
+"""
+
 from flask import (
     current_app,
     render_template,
@@ -31,7 +40,7 @@ def get_locale():
 
     Returns:
         str: The locale that best matches the user's preferred language."""
-    return request.accept_languages.best_match(app.config["LANGUAGES"].keys())
+    return request.accept_languages.best_match(["en"])  # app.config["LANGUAGES"].keys()
 
 
 babel = Babel(app, locale_selector=get_locale)
@@ -68,7 +77,7 @@ def custom_image(filename):
     return send_from_directory("app/static/images", filename)
 
 
-@app.route("/reset", methods=["POST"])
+@app.route("/reset", methods=["DELETE"])
 def reset():
     """
     Resets the problem definition, solver definiton, and routes.
@@ -90,9 +99,12 @@ def reset():
     current_app.simulation = False
     return jsonify(success=True, message=gettext("Reset done"))
 
-@app.route('/maps-api-key', methods=["GET"])
+
+@app.route("/maps-api-key", methods=["GET"])
 def get_maps_api_key():
-    print(app.config["API_KEY"])
+    """
+    Gets the Google Maps API KEY from the configuration file.
+    """
     return jsonify({"apiKey": app.config["API_KEY"]})
 
 
@@ -124,7 +136,7 @@ def main():
 
     if request.method == "POST":
         return redirect("/")
-    return render_template("index.html",coordinates=current_app.map_center)
+    return render_template("index.html", coordinates=current_app.map_center)
 
 
 if __name__ == "__main__":

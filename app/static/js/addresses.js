@@ -51,7 +51,7 @@ function addAddress (address, color, depot = false) {
 
 function changeAddressAltitude (index, altitude) {
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/change-altitude', true)
+  xhr.open('PATCH', '/change-altitude', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
