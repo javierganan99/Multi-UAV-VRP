@@ -59,7 +59,7 @@ function stopSimulation () {
   }
   globalElements.poseMarkers = {}
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/stop-simulation', true)
+  xhr.open('DELETE', '/stop-simulation', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {

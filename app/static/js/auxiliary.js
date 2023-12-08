@@ -26,7 +26,7 @@ function stringNumbersToList (str, numbers2load) {
 function reset (event) {
   event.preventDefault()
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', '/reset', true)
+  xhr.open('DELETE', '/reset', true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
