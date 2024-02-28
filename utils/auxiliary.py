@@ -143,7 +143,7 @@ def load_yaml(file: str = "data.yaml") -> Dict:
 
 def save_yaml(file, data):
     """
-    This function save data in a yaml file
+    This function save data in a yaml file.
 
     Args:
         file (str): The file name or path where the data will be saved.
